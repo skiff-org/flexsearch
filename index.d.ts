@@ -63,8 +63,9 @@ declare namespace FlexSearch {
 
     search(
       query: string,
-      options: SearchOptions & { query: string },
-    ): T[];
+      options?: SearchOptions & { query: string }
+    ): any // The shape of the resulting object can vary widely,
+           // so we will put off typing it for now
 
     // TODO add async methods
     // TODO add more methods
@@ -105,6 +106,7 @@ interface SearchResults<T> {
 interface CreateDocumentOptions {
   id: string;
   index: any;
+  store: string[];
 }
 
 export type CreateOptions = {
