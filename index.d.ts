@@ -55,7 +55,7 @@ declare namespace FlexSearch {
   }
 
   export class Document<T> {
-    constructor(options?: CreateOptions);
+    constructor(options?: CreateOptions | CreateDocumentOptions);
     add(o: T): this;
     add(id: number, o: T): this;
     update(o: T): this;
@@ -94,6 +94,19 @@ interface SearchResults<T> {
   result: T[];
 }
 
+/**
+ * These are the options necessary for initializing a Document
+ * A document needs to know two things: what is the 'primary key' to index by (id)
+ * and what fields should be indexed (index). The `index` parameter can also
+ * contain much more complicated information, as described in the FlexSearch
+ * README. Therefore, we give it the any time to allow multiple different ways
+ * of creating it
+ */
+interface CreateDocumentOptions {
+  id: string;
+  index: any;
+}
+
 export type CreateOptions = {
   profile?: IndexProfile;
   tokenize?: DefaultTokenizer | TokenizerFn;
@@ -108,6 +121,7 @@ export type CreateOptions = {
   stemmer?: Stemmer | string | false;
   filter?: FilterFn | string | false;
   rtl?: boolean;
+  document?: CreateDocumentOptions;
 };
 
 //   limit	number	Sets the limit of results.
