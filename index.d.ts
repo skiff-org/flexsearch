@@ -13,12 +13,13 @@ declare class FlexSearch {
 }
 
 declare namespace FlexSearch {
+
   export class Index<T> {
     readonly id: string;
     readonly index: string;
     readonly length: number;
 
-    init(options?: CreateOptions): this;
+    constructor(options?: CreateOptions);
     info(): {
       id: any;
       items: any;
@@ -30,41 +31,12 @@ declare namespace FlexSearch {
       resolution: any;
       contextual: boolean;
     };
-    add(o: T): this;
     add(id: number, o: string): this;
 
     // Result without pagination -> T[]
-    search(
-      query: string,
-      options: number | SearchOptions,
-      callback: (results: T[]) => void
-    ): void;
     search(query: string, options?: number | SearchOptions): Promise<T[]>;
-    search(
-      options: SearchOptions & { query: string },
-      callback: (results: T[]) => void
-    ): void;
-    search(options: SearchOptions & { query: string }): Promise<T[]>;
-
-    // Result with pagination -> SearchResults<T>
-    search(
-      query: string,
-      options: number | (SearchOptions & { page?: boolean | Cursor }),
-      callback: (results: SearchResults<T>) => void
-    ): void;
-    search(
-      query: string,
-      options?: number | (SearchOptions & { page?: boolean | Cursor })
-    ): Promise<SearchResults<T>>;
-    search(
-      options: SearchOptions & { query: string; page?: boolean | Cursor },
-      callback: (results: SearchResults<T>) => void
-    ): void;
-    search(
-      options: SearchOptions & { query: string; page?: boolean | Cursor }
-    ): Promise<SearchResults<T>>;
-
-    update(id: number, o: T): this;
+    // TODO add async add, async search
+    update(id: number, o: string): this;
     remove(id: number): this;
     clear(): this;
     destroy(): this;
@@ -72,6 +44,30 @@ declare namespace FlexSearch {
 
     where(whereObj: { [key: string]: string } | ((o: T) => boolean)): T[];
     encode(str: string): string;
+    export(
+      callback: (key: string, data: any) => any,
+      self?: this,
+      field?: string,
+      index_doc?: Number,
+      index?: Number
+    ): Promise<boolean>;
+    import(key: string, data: any): void;
+  }
+
+  export class Document<T> {
+    constructor(options?: CreateOptions);
+    add(o: T): this;
+    add(id: number, o: T): this;
+    update(o: T): this;
+    update(id: number, o: T): this;
+
+    search(
+      query: string,
+      options: SearchOptions & { query: string },
+    ): T[];
+
+    // TODO add async methods
+    // TODO add more methods
     export(
       callback: (key: string, data: any) => any,
       self?: this,
@@ -98,11 +94,6 @@ interface SearchResults<T> {
   result: T[];
 }
 
-interface Document {
-  id: string;
-  field: any;
-}
-
 export type CreateOptions = {
   profile?: IndexProfile;
   tokenize?: DefaultTokenizer | TokenizerFn;
@@ -117,7 +108,6 @@ export type CreateOptions = {
   stemmer?: Stemmer | string | false;
   filter?: FilterFn | string | false;
   rtl?: boolean;
-  doc?: Document;
 };
 
 //   limit	number	Sets the limit of results.
