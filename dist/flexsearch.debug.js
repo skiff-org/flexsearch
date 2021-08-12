@@ -345,7 +345,7 @@ function x(a) {
 function y(a) {
   return "object" === typeof a;
 }
-function A(a) {
+function z(a) {
   return "function" === typeof a;
 }
 ;function ca(a, b, c, d) {
@@ -407,7 +407,7 @@ function J(a, b) {
     const c = this, d = arguments;
     var e = d[d.length - 1];
     let f;
-    A(e) && (f = e, delete d[d.length - 1]);
+    z(e) && (f = e, delete d[d.length - 1]);
     e = new Promise(function(g) {
       setTimeout(function() {
         c.async = !0;
@@ -427,9 +427,9 @@ function J(a, b) {
     const q = a[n], v = q.length, r = w();
     let p = !g;
     for (let m = 0; m < v; m++) {
-      const u = q[m], z = u.length;
-      if (z) {
-        for (let D = 0, C, B; D < z; D++) {
+      const u = q[m], A = u.length;
+      if (A) {
+        for (let D = 0, C, B; D < A; D++) {
           if (B = u[D], g) {
             if (g[B]) {
               if (!n) {
@@ -639,8 +639,8 @@ L.prototype.add = function(a, b, c, d) {
                 for (e = w(), g = this.resolution_ctx, f = m, k = Math.min(v + 1, d - p), e[f] = 1, l = 1; l < k; l++) {
                   if ((m = b[this.rtl ? d - 1 - p - l : p + l]) && m.length >= this.minlength && !e[m]) {
                     e[m] = 1;
-                    const u = M(g + (d / 2 > g ? 0 : 1), d, p, k - 1, l - 1), z = this.bidirectional && m > f;
-                    this.push_index(n, z ? f : m, u, a, c, z ? m : f);
+                    const u = M(g + (d / 2 > g ? 0 : 1), d, p, k - 1, l - 1), A = this.bidirectional && m > f;
+                    this.push_index(n, A ? f : m, u, a, c, A ? m : f);
                   }
                 }
               }
@@ -842,6 +842,16 @@ L.prototype.import = function(a, b) {
     }
   }
 };
+L.prototype.exportToObject = function() {
+  return {reg:this.register, cfg:{opt:this.optimize}, map:this.map, ctx:this.ctx};
+};
+L.prototype.importFromObject = function(a) {
+  this.optimize = a.cfg.opt;
+  this.register = a.register;
+  this.map = a.map;
+  this.ctx = a.ctx;
+  return this;
+};
 ka(L.prototype);
 function ta(a) {
   a = a.data;
@@ -867,7 +877,7 @@ function O(a) {
     return new O(a);
   }
   var b;
-  a ? A(b = a.encode) && (a.encode = b.toString()) : a = {};
+  a ? z(b = a.encode) && (a.encode = b.toString()) : a = {};
   (b = (self || window)._factory) && (b = b.toString());
   const c = self.exports, d = this;
   this.worker = va(b, c, a.worker);
@@ -898,7 +908,7 @@ function P(a) {
     const b = this, c = [].slice.call(arguments);
     var d = c[c.length - 1];
     let e;
-    A(d) && (e = d, c.splice(c.length - 1, 1));
+    z(d) && (e = d, c.splice(c.length - 1, 1));
     d = new Promise(function(f) {
       setTimeout(function() {
         b.resolver[++ua] = f;
@@ -1091,14 +1101,14 @@ R.prototype.search = function(a, b, c, d) {
   l || (l = this.field);
   q = q && (1 < l.length || n && 1 < n.length);
   const p = !d && (this.worker || this.async) && [];
-  for (let m = 0, u, z, D; m < l.length; m++) {
+  for (let m = 0, u, A, D; m < l.length; m++) {
     let C;
-    z = l[m];
-    x(z) || (C = z, z = z.field);
+    A = l[m];
+    x(A) || (C = A, A = A.field);
     if (p) {
-      p[m] = this.index[z].searchAsync(a, b, C || c);
+      p[m] = this.index[A].searchAsync(a, b, C || c);
     } else {
-      D = (u = d ? d[m] : this.index[z].search(a, b, C || c)) && u.length;
+      D = (u = d ? d[m] : this.index[A].search(a, b, C || c)) && u.length;
       if (n && D) {
         const B = [];
         let I = 0;
@@ -1111,7 +1121,7 @@ R.prototype.search = function(a, b, c, d) {
         I && (u = q ? la(B, b || 100, v || 0) : ma(u, B), D = u.length);
       }
       if (D) {
-        f[r] = z, e[r++] = u;
+        f[r] = A, e[r++] = u;
       } else {
         if (q) {
           return [];
@@ -1122,8 +1132,8 @@ R.prototype.search = function(a, b, c, d) {
   if (p) {
     const m = this;
     return new Promise(function(u) {
-      Promise.all(p).then(function(z) {
-        u(m.search(a, b, c, z));
+      Promise.all(p).then(function(A) {
+        u(m.search(a, b, c, A));
       });
     });
   }
@@ -1220,6 +1230,19 @@ R.prototype.import = function(a, b) {
         c && a && this.index[c].import(a, b);
     }
   }
+};
+R.prototype.exportToObject = function() {
+  const a = {tag:this.tagIndex, reg:this.register, store:this.store, field:this.field, index:{}};
+  Object.entries(this.index).forEach(([b, c]) => {
+    a.index[b] = c.exportToObject();
+  });
+  return a;
+};
+R.prototype.importFromObject = function(a) {
+  this.tagIndex = a.tag;
+  this.register = a.reg;
+  this.store = a.store;
+  this.field = a.field;
 };
 ka(R.prototype);
 var za = {encode:ya, rtl:!1, tokenize:""};
