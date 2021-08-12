@@ -773,10 +773,8 @@ if(SUPPORT_CACHE){
 
 if(SUPPORT_SERIALIZE){
 
-    Document.prototype.export = exportDocument;
-    Document.prototype.import = importDocument;
-    Document.prototype.exportToObject   = exportDocumentToObject;
-    Document.prototype.importFromObject = importDocumentFromObject;
+    Document.prototype.export = exportDocumentToObject;
+    Document.prototype.import = importDocumentFromObject;
 }
 
 if(SUPPORT_ASYNC){

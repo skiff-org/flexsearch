@@ -47,7 +47,7 @@ export function exportDocumentToObject() {
     index: {}
   };
   Object.entries(this.index).forEach(([key, index]) => {
-    result.index[key] = index.exportToObject();
+    result.index[key] = index.export();
   });
   return result;
 }
