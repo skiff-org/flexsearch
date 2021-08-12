@@ -810,11 +810,8 @@ if(SUPPORT_CACHE){
 }
 
 if(SUPPORT_SERIALIZE){
-
-    Index.prototype.export = exportIndex;
-    Index.prototype.import = importIndex;
-    Index.prototype.exportToObject   = exportIndexToObject;
-    Index.prototype.importFromObject = importIndexFromObject;
+    Index.prototype.export = exportIndexToObject
+    Index.prototype.import = importIndexFromObject
 }
 
 if(SUPPORT_ASYNC){

@@ -2,9 +2,10 @@ import { IndexInterface, DocumentInterface } from "./type.js";
 import { create_object, is_string } from "./common.js";
 
 
-/*
+/**
  * Intended to be run as a method on Index. Export `this` to an object, which
  * can then be serialized
+ * @this IndexInterface
  */
 export function exportIndexToObject() {
   return {
@@ -21,7 +22,9 @@ export function exportIndexToObject() {
 /**
  * Perform the reverse of the above. Given an object of the type returned above,
  * import it into the current index
+ * @this IndexInterface
  */
+
 export function importIndexFromObject(obj) {
   this.optimize = obj.cfg.opt;
   this.register = obj.register;
@@ -30,6 +33,11 @@ export function importIndexFromObject(obj) {
   return this;
 }
 
+/**
+ * Intended to be run as a method on Document. Export `this` to an object, which
+ * can then be serialized
+ * @this DocumentInterface
+ */
 export function exportDocumentToObject() {
   const result = {
     tag:   this.tagIndex,
@@ -43,6 +51,10 @@ export function exportDocumentToObject() {
   });
   return result;
 }
+
+/**
+ * @this DocumentInterface
+ */
 
 export function importDocumentFromObject(obj) {
   this.tagIndex = obj.tag;
