@@ -9,13 +9,13 @@ import { create_object, is_string } from "./common.js";
  */
 export function exportIndexToObject() {
   return {
-    reg: this.register, // No support for fastupdate
-    cfg: {
+    'reg': this.register, // No support for fastupdate
+    'cfg': {
       // The only cfg parameter that really gets used during import is optimize
-      opt: this.optimize
+      'opt': this.optimize
     },
-    map: this.map,
-    ctx: this.ctx
+    'map': this.map,
+    'ctx': this.ctx
   }
 }
 
@@ -26,10 +26,10 @@ export function exportIndexToObject() {
  */
 
 export function importIndexFromObject(obj) {
-  this.optimize = obj.cfg.opt;
-  this.register = obj.register;
-  this.map      = obj.map;
-  this.ctx      = obj.ctx;
+  this.optimize = obj['cfg']['opt'];
+  this.register = obj['reg'];
+  this.map      = obj['map'];
+  this.ctx      = obj['ctx'];
   return this;
 }
 
@@ -40,11 +40,11 @@ export function importIndexFromObject(obj) {
  */
 export function exportDocumentToObject() {
   const result = {
-    tag:   this.tagIndex,
-    reg:   this.register,
-    store: this.store,
-    field: this.field,
-    index: {}
+    'tag':   this.tagIndex,
+    'reg':   this.register,
+    'store': this.store,
+    'field': this.field,
+    'index': {}
   };
   Object.entries(this.index).forEach(([key, index]) => {
     result.index[key] = index.export();
@@ -57,11 +57,11 @@ export function exportDocumentToObject() {
  */
 
 export function importDocumentFromObject(obj) {
-  this.tagIndex = obj.tag;
-  this.register = obj.reg;
-  this.store    = obj.store;
-  this.field    = obj.field;
-  Object.entries(obj.index).forEach(([key, exportedIndex]) => {
+  this.tagIndex = obj['tag'];
+  this.register = obj['reg'];
+  this.store    = obj['store'];
+  this.field    = obj['field'];
+  Object.entries(obj['index']).forEach(([key, exportedIndex]) => {
     this.index[key].import(exportedIndex);
   });
 }
