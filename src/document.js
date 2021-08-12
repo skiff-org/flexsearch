@@ -23,7 +23,12 @@ import Cache, { searchCache } from "./cache.js";
 import { create_object, is_array, is_string, is_object, parse_option, get_keys } from "./common.js";
 import apply_async from "./async.js";
 import { intersect, intersect_union } from "./intersect.js";
-import { exportDocument, importDocument } from "./serialize.js";
+import {
+  exportDocument,
+  importDocument,
+  exportDocumentToObject,
+  importDocumentFromObject
+} from "./serialize.js";
 import WorkerIndex from "./worker/index.js";
 
 /**
@@ -770,6 +775,8 @@ if(SUPPORT_SERIALIZE){
 
     Document.prototype.export = exportDocument;
     Document.prototype.import = importDocument;
+    Document.prototype.exportToObject   = exportDocumentToObject;
+    Document.prototype.importFromObject = importDocumentFromObject;
 }
 
 if(SUPPORT_ASYNC){

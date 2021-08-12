@@ -25,7 +25,12 @@ import apply_async from "./async.js";
 import { intersect } from "./intersect.js";
 import Cache, { searchCache } from "./cache.js";
 import apply_preset from "./preset.js";
-import { exportIndex, importIndex } from "./serialize.js";
+import {
+  exportIndex,
+  importIndex,
+  exportIndexToObject,
+  importIndexFromObject
+} from "./serialize.js";
 
 /**
  * @constructor
@@ -808,6 +813,8 @@ if(SUPPORT_SERIALIZE){
 
     Index.prototype.export = exportIndex;
     Index.prototype.import = importIndex;
+    Index.prototype.exportToObject   = exportIndexToObject;
+    Index.prototype.importFromObject = importIndexFromObject;
 }
 
 if(SUPPORT_ASYNC){

@@ -1,6 +1,56 @@
 import { IndexInterface, DocumentInterface } from "./type.js";
 import { create_object, is_string } from "./common.js";
 
+
+/*
+ * Intended to be run as a method on Index. Export `this` to an object, which
+ * can then be serialized
+ */
+export function exportIndexToObject() {
+  return {
+    reg: this.register, // No support for fastupdate
+    cfg: {
+      // The only cfg parameter that really gets used during import is optimize
+      opt: this.optimize
+    },
+    map: this.map,
+    ctx: this.ctx
+  }
+}
+
+/**
+ * Perform the reverse of the above. Given an object of the type returned above,
+ * import it into the current index
+ */
+export function importIndexFromObject(obj) {
+  this.optimize = obj.cfg.opt;
+  this.register = obj.register;
+  this.map      = obj.map;
+  this.ctx      = obj.ctx;
+  return this;
+}
+
+export function exportDocumentToObject() {
+  const result = {
+    tag:   this.tagIndex,
+    reg:   this.register,
+    store: this.store,
+    field: this.field,
+    index: {}
+  };
+  Object.entries(this.index).forEach(([key, index]) => {
+    result.index[key] = index.exportToObject();
+  });
+  return result;
+}
+
+export function importDocumentFromObject(obj) {
+  this.tagIndex = obj.tag;
+  this.register = obj.reg;
+  this.store    = obj.store;
+  this.field    = obj.field;
+}
+
 async function lazyExport(callback, self, key, index_doc, index, data){
   // Run the callback on the given data
   const res = callback(key, JSON.stringify(data));
