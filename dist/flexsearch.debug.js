@@ -784,10 +784,10 @@ function N(a, b, c, d, e) {
 }
 L.prototype.searchCache = na;
 L.prototype.export = function() {
-  return {reg:this.register, cfg:{opt:this.optimize}, map:this.map, ctx:this.ctx};
+  return {reg:this.register, opt:this.optimize, map:this.map, ctx:this.ctx};
 };
 L.prototype.import = function(a) {
-  this.optimize = a.cfg.opt;
+  this.optimize = a.opt;
   this.register = a.reg;
   this.map = a.map;
   this.ctx = a.ctx;

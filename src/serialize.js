@@ -11,10 +11,7 @@ export function exportIndexToObject() {
   // @
   return {
     reg: this.register, // No support for fastupdate
-    cfg: {
-      // The only cfg parameter that really gets used during import is optimize
-      opt: this.optimize
-    },
+    opt: this.optimize,
     map: this.map,
     ctx: this.ctx
   }
@@ -27,7 +24,7 @@ export function exportIndexToObject() {
  */
 
 export function importIndexFromObject(obj) {
-  this.optimize = obj.cfg.opt;
+  this.optimize = obj.opt;
   this.register = obj.reg;
   this.map      = obj.map;
   this.ctx      = obj.ctx;
