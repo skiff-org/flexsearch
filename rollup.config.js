@@ -11,7 +11,7 @@ export default [
       file: pkg.browser,
       format: 'umd'
     },
-    plugins: terser()
+    plugins: terser({format: { keep_quoted_props: true }})
   }
 ]
 
