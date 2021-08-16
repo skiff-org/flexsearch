@@ -1,4 +1,4 @@
-export class Index<T> {
+export class Index {
   readonly id: string;
   readonly index: string;
   readonly length: number;
@@ -18,24 +18,15 @@ export class Index<T> {
   add(id: number, o: string): this;
 
   // Result without pagination -> T[]
-  search(query: string, options?: number | SearchOptions): Promise<T[]>;
-  // TODO add async add, async search
+  search(query: string, options?: number | SearchOptions): any;
   update(id: number, o: string): this;
   remove(id: number): this;
   clear(): this;
   destroy(): this;
   addMatcher(matcher: Matcher): this;
-
-  where(whereObj: { [key: string]: string } | ((o: T) => boolean)): T[];
   encode(str: string): string;
-  export(
-    callback: (key: string, data: any) => any,
-    self?: this,
-    field?: string,
-    index_doc?: Number,
-    index?: Number
-  ): Promise<boolean>;
-  import(key: string, data: any): void;
+  serialize(): Record<string, any>;
+  static deserialize(obj: Record<string, any>): Index;
 }
 
 export class Document<T> {
@@ -53,14 +44,8 @@ export class Document<T> {
 
   // TODO add async methods
   // TODO add more methods
-  export(
-    callback: (key: string, data: any) => any,
-    self?: this,
-    field?: string,
-    index_doc?: Number,
-    index?: Number
-  ): Promise<boolean>;
-  import(key: string, data: any): void;
+  serialize(): Record<string, any>;
+  static deserialize(obj: Record<string, any>): Document<any>;
 }
 
 interface SearchOptions {
