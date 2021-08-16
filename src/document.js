@@ -35,21 +35,21 @@ export class Document {
     this.key = ((opt = document['key'] || document['id']) && parse_tree(opt, this.marker)) || 'id';
     this.fastupdate = parse_option(options['fastupdate'], true);
 
-      this.storetree = (opt = document['store']) && (opt !== true) && [];
-      this.store = opt && create_object();
+    this.storetree = (opt = document['store']) && (opt !== true) && [];
+    this.store = opt && create_object();
 
-      this.tag = ((opt = document['tag']) && parse_tree(opt, this.marker));
-      this.tagindex = opt && create_object();
+    this.tag = ((opt = document['tag']) && parse_tree(opt, this.marker));
+    this.tagindex = opt && create_object();
 
-      this.cache = (opt = options['cache']) && new Cache(opt);
+    this.cache = (opt = options['cache']) && new Cache(opt);
 
-      // do not apply cache again for the indexes
-      options['cache'] = false;
+    // do not apply cache again for the indexes
+    options['cache'] = false;
 
-      this.worker = options['worker'];
+    this.worker = options['worker'];
 
-      // this switch is used by recall of promise callbacks
-      this.async = false;
+    // this switch is used by recall of promise callbacks
+    this.async = false;
 
     this.index = parse_descriptor.call(this, options, document);
   }

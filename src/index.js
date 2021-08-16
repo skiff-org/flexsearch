@@ -31,7 +31,7 @@ export class Index {
     let charset, lang, tmp;
 
     if (options) {
-        options = apply_preset(options);
+      options = apply_preset(options);
 
       charset = options['charset'];
       lang = options['lang'];
@@ -74,7 +74,7 @@ export class Index {
     this.stemmer = (tmp = options['stemmer'] || (lang && lang.stemmer)) && init_stemmer_or_matcher(tmp, true);
     this.filter = (tmp = options['filter'] || (lang && lang.filter)) && init_filter(tmp);
 
-      this.cache = (tmp = options['cache']) && new Cache(tmp);
+    this.cache = (tmp = options['cache']) && new Cache(tmp);
   }
   //Index.prototype.pipeline = pipeline;
   /**

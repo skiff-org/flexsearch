@@ -6,24 +6,24 @@ import { searchCache } from './cache';
  */
 
 function Engine(index){
-    //if(this.constructor === Engine){
-    if(this instanceof Engine){
-      throw new Error('Can\'t instantiate abstract class!');
-    }
+  //if(this.constructor === Engine){
+  if(this instanceof Engine){
+    throw new Error('Can\'t instantiate abstract class!');
+  }
 
-    index.prototype.searchCache = searchCache;
+  index.prototype.searchCache = searchCache;
 
-    index.prototype.addAsync = addAsync;
-    index.prototype.appendAsync = appendAsync;
-    index.prototype.searchAsync = searchAsync;
-    index.prototype.updateAsync = updateAsync;
-    index.prototype.removeAsync = removeAsync;
+  index.prototype.addAsync = addAsync;
+  index.prototype.appendAsync = appendAsync;
+  index.prototype.searchAsync = searchAsync;
+  index.prototype.updateAsync = updateAsync;
+  index.prototype.removeAsync = removeAsync;
 }
 
-  Engine.prototype.searchCache = searchCache;
+Engine.prototype.searchCache = searchCache;
 
-  Engine.prototype.addAsync = addAsync;
-  Engine.prototype.appendAsync = appendAsync;
-  Engine.prototype.searchAsync = searchAsync;
-  Engine.prototype.updateAsync = updateAsync;
-  Engine.prototype.removeAsync = removeAsync;
+Engine.prototype.addAsync = addAsync;
+Engine.prototype.appendAsync = appendAsync;
+Engine.prototype.searchAsync = searchAsync;
+Engine.prototype.updateAsync = updateAsync;
+Engine.prototype.removeAsync = removeAsync;
