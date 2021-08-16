@@ -6,12 +6,11 @@
  * https://github.com/nextapps-de/flexsearch
  */
 
-import Index from './index.js';
+import { Index } from './index.js';
 import Cache, { searchCache } from './cache.js';
 import { create_object, is_array, is_string, is_object, parse_option } from './common.js';
 import apply_async from './async.js';
 import { intersect, intersect_union } from './intersect.js';
-import WorkerIndex from './worker/index.js';
 
 /**
  * @constructor
@@ -445,14 +444,6 @@ class parse_descriptor {
       }
 
       opt = is_object(opt) ? Object.assign({}, options, opt) : options;
-
-      if (SUPPORT_WORKER && this.worker) {
-        index[key] = new WorkerIndex(opt);
-
-        if (!index[key].worker) {
-          this.worker = false;
-        }
-      }
 
       if (!this.worker) {
         index[key] = new Index(opt, this.register);
