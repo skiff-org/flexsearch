@@ -516,9 +516,9 @@ export class Index {
    * Given a string load an Index object from it
    * @param {string} str the serialized Index object
    */
-  static deserialize(obj) {
+  static deserialize(obj, params) {
     // TODO add extra parameter for index initialization?
-    const result = new Index();
+    const result = new Index(params);
     result.optimize = obj.opt;
     result.register = obj.reg;
     result.map      = obj.map;

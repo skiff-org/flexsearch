@@ -397,9 +397,9 @@ export class Document {
   /**
    * Create a `Document` from a serialized object
    */
-  static deserialize(obj) {
+  static deserialize(obj, params) {
     // TODO add properties here?
-    const result = new Document();
+    const result = new Document(params);
     result.tagIndex = obj.tag;
     result.register = obj.reg;
     result.store    = obj.store;
