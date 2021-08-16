@@ -26,7 +26,7 @@ export class Index {
   addMatcher(matcher: Matcher): this;
   encode(str: string): string;
   serialize(): Record<string, any>;
-  static deserialize(obj: Record<string, any>): Index;
+  static deserialize(obj: Record<string, any>, params: Record<string, any>): Index;
 }
 
 export class Document<T> {
@@ -45,7 +45,7 @@ export class Document<T> {
   // TODO add async methods
   // TODO add more methods
   serialize(): Record<string, any>;
-  static deserialize(obj: Record<string, any>): Document<any>;
+  static deserialize(obj: Record<string, any>, params: Record<string, any>): Document<any>;
 }
 
 interface SearchOptions {
