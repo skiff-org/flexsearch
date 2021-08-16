@@ -15,12 +15,6 @@ import apply_async from './async.js';
 import { intersect } from './intersect.js';
 import Cache, { searchCache } from './cache.js';
 import apply_preset from './preset.js';
-import {
-  exportIndex,
-  importIndex,
-  exportIndexToObject,
-  importIndexFromObject
-} from './serialize.js';
 
 /**
  * @constructor
@@ -598,6 +592,32 @@ class Index {
     }
 
     return this;
+  }
+
+  /**
+   * Convert `this` into an exportable object
+   */
+  serialize() {
+    return {
+      reg: this.register, // No support for fastupdate
+      opt: this.optimize,
+      map: this.map,
+      ctx: this.ctx
+    };
+  }
+
+  /**
+   * Given a string load an Index object from it
+   * @param {string} str the serialized Index object
+   */
+  static deserialize(obj) {
+    // TODO add extra parameter for index initialization?
+    const result = new Index();
+    result.optimize = obj.opt;
+    result.register = obj.reg;
+    result.map      = obj.map;
+    result.ctx      = obj.ctx;
+    return result;
   }
 }
 

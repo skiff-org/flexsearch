@@ -472,6 +472,40 @@ class Document {
     this.store[id] = data;
     return this;
   }
+
+  /**
+   * Convert `this` into an export object
+   */
+  serialize() {
+    const result = {
+      tag:   this.tagIndex,
+      reg:   this.register,
+      store: this.store,
+      field: this.field,
+      index: {}
+    };
+    Object.entries(this.index).forEach(([key, index]) => {
+      result.index[key] = index.export();
+    });
+    return result;
+  }
+
+  /**
+   * Create a `Document` from an exported object
+   */
+  static deserialize(obj) {
+    // TODO add properties here?
+    const result = new Document();
+    result.tagIndex = obj.tag;
+    result.register = obj.reg;
+    result.store    = obj.store;
+    result.field    = obj.field;
+    Object.entries(obj.index).forEach(([key, exportedIndex]) => {
+      result.index[key].import(exportedIndex);
+      result.index[key].register = obj.reg;
+    });
+    return result;
+  }
 }
 
 export default Document;
