@@ -27,6 +27,7 @@
     "url": "https://github.com/skiff-org/flexsearch.git"
   },
   "scripts": {
+    "lint": "yarn run eslint src"
   },
   "files": [
     "dist/**",
@@ -39,5 +40,6 @@
   ],
   "readme": "README.md",
   "devDependencies": {
+    "eslint": "^7.32.0"
   }
 }
