@@ -1,4 +1,3 @@
-import { DEBUG } from './config.js';
 import { is_string } from './common.js';
 
 /**
@@ -72,7 +71,7 @@ export default function apply_preset(options){
 
   if(is_string(options)){
 
-    if(DEBUG && !preset[options]){
+    if(!preset[options]){
 
       console.warn('Preset not found: ' + options);
     }
@@ -85,7 +84,7 @@ export default function apply_preset(options){
 
     if(preset){
 
-      if(DEBUG && !preset[preset]){
+      if(!preset[preset]){
 
         console.warn('Preset not found: ' + preset);
       }

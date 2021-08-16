@@ -6,16 +6,6 @@
  * https://github.com/nextapps-de/flexsearch
  */
 
-import {
-
-  SUPPORT_ENCODER,
-  SUPPORT_CACHE,
-  SUPPORT_ASYNC,
-  SUPPORT_SUGGESTION,
-  SUPPORT_SERIALIZE
-
-} from './config.js';
-
 import { IndexInterface } from './type.js';
 import { encode as default_encoder } from './lang/latin/default.js';
 import { create_object, create_object_array, concat, sort_by_length_down, is_array, is_string, is_object, parse_option } from './common.js';

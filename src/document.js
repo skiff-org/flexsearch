@@ -6,17 +6,6 @@
  * https://github.com/nextapps-de/flexsearch
  */
 
-import {
-
-  SUPPORT_ASYNC,
-  SUPPORT_CACHE,
-  SUPPORT_SERIALIZE,
-  SUPPORT_STORE,
-  SUPPORT_TAGS,
-  SUPPORT_WORKER
-
-} from './config.js';
-
 import Index from './index.js';
 import { DocumentInterface } from './type.js';
 import Cache, { searchCache } from './cache.js';
