@@ -4,10 +4,10 @@
 
 export function IndexInterface(){
 
-    this.cache = null;
-    this.matcher = null;
-    this.stemmer = null;
-    this.filter = null;
+  this.cache = null;
+  this.matcher = null;
+  this.stemmer = null;
+  this.filter = null;
 }
 
 /**
@@ -62,5 +62,5 @@ IndexInterface.prototype.remove;
 
 export function DocumentInterface(){
 
-    this.field = null;
+  this.field = null;
 }

@@ -8,28 +8,28 @@
 
 import {
 
-    SUPPORT_ASYNC,
-    SUPPORT_CACHE,
-    SUPPORT_SERIALIZE,
-    SUPPORT_STORE,
-    SUPPORT_TAGS,
-    SUPPORT_WORKER
+  SUPPORT_ASYNC,
+  SUPPORT_CACHE,
+  SUPPORT_SERIALIZE,
+  SUPPORT_STORE,
+  SUPPORT_TAGS,
+  SUPPORT_WORKER
 
-} from "./config.js";
+} from './config.js';
 
-import Index from "./index.js";
-import { DocumentInterface } from "./type.js";
-import Cache, { searchCache } from "./cache.js";
-import { create_object, is_array, is_string, is_object, parse_option, get_keys } from "./common.js";
-import apply_async from "./async.js";
-import { intersect, intersect_union } from "./intersect.js";
+import Index from './index.js';
+import { DocumentInterface } from './type.js';
+import Cache, { searchCache } from './cache.js';
+import { create_object, is_array, is_string, is_object, parse_option, get_keys } from './common.js';
+import apply_async from './async.js';
+import { intersect, intersect_union } from './intersect.js';
 import {
   exportDocument,
   importDocument,
   exportDocumentToObject,
   importDocumentFromObject
-} from "./serialize.js";
-import WorkerIndex from "./worker/index.js";
+} from './serialize.js';
+import WorkerIndex from './worker/index.js';
 
 /**
  * @constructor
@@ -46,39 +46,39 @@ class Document {
       return new Document(options);
     }
 
-    const document = options["document"] || options["doc"] || options;
+    const document = options['document'] || options['doc'] || options;
     let opt;
 
     this.tree = [];
     this.field = [];
     this.marker = [];
     this.register = create_object();
-    this.key = ((opt = document["key"] || document["id"]) && parse_tree(opt, this.marker)) || "id";
-    this.fastupdate = parse_option(options["fastupdate"], true);
+    this.key = ((opt = document['key'] || document['id']) && parse_tree(opt, this.marker)) || 'id';
+    this.fastupdate = parse_option(options['fastupdate'], true);
 
     if (SUPPORT_STORE) {
 
-      this.storetree = (opt = document["store"]) && (opt !== true) && [];
+      this.storetree = (opt = document['store']) && (opt !== true) && [];
       this.store = opt && create_object();
     }
 
     if (SUPPORT_TAGS) {
 
-      this.tag = ((opt = document["tag"]) && parse_tree(opt, this.marker));
+      this.tag = ((opt = document['tag']) && parse_tree(opt, this.marker));
       this.tagindex = opt && create_object();
     }
 
     if (SUPPORT_CACHE) {
 
-      this.cache = (opt = options["cache"]) && new Cache(opt);
+      this.cache = (opt = options['cache']) && new Cache(opt);
 
       // do not apply cache again for the indexes
-      options["cache"] = false;
+      options['cache'] = false;
     }
 
     if (SUPPORT_WORKER) {
 
-      this.worker = options["worker"];
+      this.worker = options['worker'];
     }
 
     if (SUPPORT_ASYNC) {
@@ -267,7 +267,7 @@ class Document {
       if (!limit && is_object(query)) {
 
         options = /** @type {Object} */ (query);
-        query = options["query"];
+        query = options['query'];
       }
       else if (is_object(limit)) {
 
@@ -289,13 +289,13 @@ class Document {
       }
       else {
 
-        pluck = options["pluck"];
-        field = pluck || options["index"] || options["field"] /*|| (is_string(options) && [options])*/;
-        tag = SUPPORT_TAGS && options["tag"];
-        enrich = SUPPORT_STORE && this.store && options["enrich"];
-        bool = options["bool"] === "and";
-        limit = options["limit"] || 100;
-        offset = options["offset"] || 0;
+        pluck = options['pluck'];
+        field = pluck || options['index'] || options['field'] /*|| (is_string(options) && [options])*/;
+        tag = SUPPORT_TAGS && options['tag'];
+        enrich = SUPPORT_STORE && this.store && options['enrich'];
+        bool = options['bool'] === 'and';
+        limit = options['limit'] || 100;
+        offset = options['offset'] || 0;
 
         if (tag) {
 
@@ -345,7 +345,7 @@ class Document {
       if (!is_string(key)) {
 
         opt = key;
-        key = key["field"];
+        key = key['field'];
       }
 
       if (promises) {
@@ -463,8 +463,8 @@ class Document {
       }
 
       result[i] = {
-        "field": result_field[i],
-        "result": res
+        'field': result_field[i],
+        'result': res
       };
     }
 
@@ -495,7 +495,7 @@ class parse_descriptor {
   constructor(options, document) {
 
     const index = create_object();
-    let field = document["index"] || document["field"] || document;
+    let field = document['index'] || document['field'] || document;
 
     if (is_string(field)) {
 
@@ -509,7 +509,7 @@ class parse_descriptor {
       if (!is_string(key)) {
 
         opt = key;
-        key = key["field"];
+        key = key['field'];
       }
 
       opt = is_object(opt) ? Object.assign({}, options, opt) : options;
@@ -535,7 +535,7 @@ class parse_descriptor {
 
     if (SUPPORT_STORE && this.storetree) {
 
-      let store = document["store"];
+      let store = document['store'];
 
       if (is_string(store)) {
 
@@ -554,140 +554,140 @@ class parse_descriptor {
 
 function parse_tree(key, marker){
 
-    const tree = key.split(":");
-    let count = 0;
+  const tree = key.split(':');
+  let count = 0;
 
-    for(let i = 0; i < tree.length; i++){
+  for(let i = 0; i < tree.length; i++){
 
-        key = tree[i];
+    key = tree[i];
 
-        if(key.indexOf("[]") >= 0){
+    if(key.indexOf('[]') >= 0){
 
-            key = key.substring(0, key.length - 2);
+      key = key.substring(0, key.length - 2);
 
-            if(key){
+      if(key){
 
-                marker[count] = true;
-            }
-        }
-
-        if(key){
-
-            tree[count++] = key;
-        }
+        marker[count] = true;
+      }
     }
 
-    if(count < tree.length){
+    if(key){
 
-        tree.length = count;
+      tree[count++] = key;
     }
+  }
 
-    return count > 1 ? tree : tree[0];
+  if(count < tree.length){
+
+    tree.length = count;
+  }
+
+  return count > 1 ? tree : tree[0];
 }
 
 function parse_simple(obj, tree){
 
-    if(is_string(tree)){
+  if(is_string(tree)){
 
-        obj = obj[tree];
+    obj = obj[tree];
+  }
+  else{
+
+    for(let i = 0; obj && (i < tree.length); i++){
+
+      obj = obj[tree[i]];
     }
-    else{
+  }
 
-        for(let i = 0; obj && (i < tree.length); i++){
-
-            obj = obj[tree[i]];
-        }
-    }
-
-    return obj;
+  return obj;
 }
 
 function store_value(obj, store, tree, pos, key){
 
-    obj = obj[key];
+  obj = obj[key];
+
+  // reached target field
+
+  if(pos === (tree.length - 1)){
+
+    // store target value
+
+    store[key] = obj;
+  }
+  else if(obj){
+
+    if(is_array(obj)){
+
+      store = store[key] = new Array(obj.length);
+
+      for(let i = 0; i < obj.length; i++){
+
+        // do not increase pos (an array is not a field)
+        store_value(obj, store, tree, pos, i);
+      }
+    }
+    else{
+
+      store = store[key] || (store[key] = create_object());
+      key = tree[++pos];
+
+      store_value(obj, store, tree, pos, key);
+    }
+  }
+}
+
+function add_index(obj, tree, marker, pos, index, id, key, _append){
+
+  obj = obj[key];
+
+  if(obj){
 
     // reached target field
 
     if(pos === (tree.length - 1)){
 
-        // store target value
+      // handle target value
 
-        store[key] = obj;
+      if(is_array(obj)){
+
+        // append array contents so each entry gets a new scoring context
+
+        if(marker[pos]){
+
+          for(let i = 0; i < obj.length; i++){
+
+            index.add(id, obj[i], /* append: */ true, /* skip update: */ true);
+          }
+
+          return;
+        }
+
+        // or join array contents and use one scoring context
+
+        obj = obj.join(' ');
+      }
+
+      index.add(id, obj, _append, /* skip_update: */ true);
     }
-    else if(obj){
+    else{
 
-        if(is_array(obj)){
+      if(is_array(obj)){
 
-            store = store[key] = new Array(obj.length);
+        for(let i = 0; i < obj.length; i++){
 
-            for(let i = 0; i < obj.length; i++){
+          // do not increase index, an array is not a field
 
-                // do not increase pos (an array is not a field)
-                store_value(obj, store, tree, pos, i);
-            }
+          add_index(obj, tree, marker, pos, index, id, i, _append);
         }
-        else{
+      }
+      else{
 
-            store = store[key] || (store[key] = create_object());
-            key = tree[++pos];
+        key = tree[++pos];
 
-            store_value(obj, store, tree, pos, key);
-        }
+        add_index(obj, tree, marker, pos, index, id, key, _append);
+      }
     }
-}
-
-function add_index(obj, tree, marker, pos, index, id, key, _append){
-
-    obj = obj[key];
-
-    if(obj){
-
-        // reached target field
-
-        if(pos === (tree.length - 1)){
-
-            // handle target value
-
-            if(is_array(obj)){
-
-                // append array contents so each entry gets a new scoring context
-
-                if(marker[pos]){
-
-                    for(let i = 0; i < obj.length; i++){
-
-                        index.add(id, obj[i], /* append: */ true, /* skip update: */ true);
-                    }
-
-                    return;
-                }
-
-                // or join array contents and use one scoring context
-
-                obj = obj.join(" ");
-            }
-
-            index.add(id, obj, _append, /* skip_update: */ true);
-        }
-        else{
-
-            if(is_array(obj)){
-
-                for(let i = 0; i < obj.length; i++){
-
-                    // do not increase index, an array is not a field
-
-                    add_index(obj, tree, marker, pos, index, id, i, _append);
-                }
-            }
-            else{
-
-                key = tree[++pos];
-
-                add_index(obj, tree, marker, pos, index, id, key, _append);
-            }
-        }
-    }
+  }
 }
 
 
@@ -701,27 +701,27 @@ function add_index(obj, tree, marker, pos, index, id, key, _append){
 
 function get_tag(key, limit, offset, enrich){
 
-    let res = this.tagindex[key];
-    let len = res && (res.length - offset);
+  let res = this.tagindex[key];
+  let len = res && (res.length - offset);
 
-    if(len && (len > 0)){
+  if(len && (len > 0)){
 
-        if((len > limit) || offset){
+    if((len > limit) || offset){
 
-            res = res.slice(offset, offset + limit);
-        }
-
-        if(enrich){
-
-            res = apply_enrich.call(this, res);
-        }
-
-        return {
-
-            "tag": key,
-            "result": res
-        };
+      res = res.slice(offset, offset + limit);
     }
+
+    if(enrich){
+
+      res = apply_enrich.call(this, res);
+    }
+
+    return {
+
+      'tag': key,
+      'result': res
+    };
+  }
 }
 
 /**
@@ -730,20 +730,20 @@ function get_tag(key, limit, offset, enrich){
 
 function apply_enrich(res){
 
-    const arr = new Array(res.length);
+  const arr = new Array(res.length);
 
-    for(let x = 0, id; x < res.length; x++){
+  for(let x = 0, id; x < res.length; x++){
 
-        id = res[x];
+    id = res[x];
 
-        arr[x] = {
+    arr[x] = {
 
-            "id": id,
-            "doc": this.store[id]
-        };
-    }
+      'id': id,
+      'doc': this.store[id]
+    };
+  }
 
-    return arr;
+  return arr;
 }
 
 
@@ -754,16 +754,16 @@ if(SUPPORT_STORE){
 
 if(SUPPORT_CACHE){
 
-    Document.prototype.searchCache = searchCache;
+  Document.prototype.searchCache = searchCache;
 }
 
 if(SUPPORT_SERIALIZE){
 
-    Document.prototype.export = exportDocumentToObject;
-    Document.prototype.import = importDocumentFromObject;
+  Document.prototype.export = exportDocumentToObject;
+  Document.prototype.import = importDocumentFromObject;
 }
 
 if(SUPPORT_ASYNC){
 
-    apply_async(Document.prototype);
+  apply_async(Document.prototype);
 }

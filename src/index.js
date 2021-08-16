@@ -8,29 +8,29 @@
 
 import {
 
-    SUPPORT_ENCODER,
-    SUPPORT_CACHE,
-    SUPPORT_ASYNC,
-    SUPPORT_SUGGESTION,
-    SUPPORT_SERIALIZE
+  SUPPORT_ENCODER,
+  SUPPORT_CACHE,
+  SUPPORT_ASYNC,
+  SUPPORT_SUGGESTION,
+  SUPPORT_SERIALIZE
 
-} from "./config.js";
+} from './config.js';
 
-import { IndexInterface } from "./type.js";
-import { encode as default_encoder } from "./lang/latin/default.js";
-import { create_object, create_object_array, concat, sort_by_length_down, is_array, is_string, is_object, parse_option } from "./common.js";
-import { pipeline, init_stemmer_or_matcher, init_filter } from "./lang.js";
-import { global_lang, global_charset } from "./global.js";
-import apply_async from "./async.js";
-import { intersect } from "./intersect.js";
-import Cache, { searchCache } from "./cache.js";
-import apply_preset from "./preset.js";
+import { IndexInterface } from './type.js';
+import { encode as default_encoder } from './lang/latin/default.js';
+import { create_object, create_object_array, concat, sort_by_length_down, is_array, is_string, is_object, parse_option } from './common.js';
+import { pipeline, init_stemmer_or_matcher, init_filter } from './lang.js';
+import { global_lang, global_charset } from './global.js';
+import apply_async from './async.js';
+import { intersect } from './intersect.js';
+import Cache, { searchCache } from './cache.js';
+import apply_preset from './preset.js';
 import {
   exportIndex,
   importIndex,
   exportIndexToObject,
   importIndexFromObject
-} from "./serialize.js";
+} from './serialize.js';
 
 /**
  * @constructor
@@ -57,14 +57,14 @@ class Index {
         options = apply_preset(options);
       }
 
-      charset = options["charset"];
-      lang = options["lang"];
+      charset = options['charset'];
+      lang = options['lang'];
 
       if (is_string(charset)) {
 
-        if (charset.indexOf(":") === -1) {
+        if (charset.indexOf(':') === -1) {
 
-          charset += ":default";
+          charset += ':default';
         }
 
         charset = global_charset[charset];
@@ -80,31 +80,31 @@ class Index {
       options = {};
     }
 
-    let resolution, optimize, context = options["context"] || {};
+    let resolution, optimize, context = options['context'] || {};
 
-    this.encode = options["encode"] || (charset && charset.encode) || default_encoder;
+    this.encode = options['encode'] || (charset && charset.encode) || default_encoder;
     this.register = _register || create_object();
-    this.resolution = resolution = options["resolution"] || 9;
-    this.tokenize = tmp = (charset && charset.tokenize) || options["tokenize"] || "strict";
-    this.depth = (tmp === "strict") && context["depth"];
-    this.bidirectional = parse_option(context["bidirectional"], true);
-    this.optimize = optimize = parse_option(options["optimize"], true);
-    this.fastupdate = parse_option(options["fastupdate"], true);
-    this.minlength = options["minlength"] || 1;
-    this.boost = options["boost"];
+    this.resolution = resolution = options['resolution'] || 9;
+    this.tokenize = tmp = (charset && charset.tokenize) || options['tokenize'] || 'strict';
+    this.depth = (tmp === 'strict') && context['depth'];
+    this.bidirectional = parse_option(context['bidirectional'], true);
+    this.optimize = optimize = parse_option(options['optimize'], true);
+    this.fastupdate = parse_option(options['fastupdate'], true);
+    this.minlength = options['minlength'] || 1;
+    this.boost = options['boost'];
 
     // when not using the memory strategy the score array should not pre-allocated to its full length
     this.map = optimize ? create_object_array(resolution) : create_object();
-    this.resolution_ctx = resolution = context["resolution"] || 1;
+    this.resolution_ctx = resolution = context['resolution'] || 1;
     this.ctx = optimize ? create_object_array(resolution) : create_object();
-    this.rtl = (charset && charset.rtl) || options["rtl"];
-    this.matcher = (tmp = options["matcher"] || (lang && lang.matcher)) && init_stemmer_or_matcher(tmp, false);
-    this.stemmer = (tmp = options["stemmer"] || (lang && lang.stemmer)) && init_stemmer_or_matcher(tmp, true);
-    this.filter = (tmp = options["filter"] || (lang && lang.filter)) && init_filter(tmp);
+    this.rtl = (charset && charset.rtl) || options['rtl'];
+    this.matcher = (tmp = options['matcher'] || (lang && lang.matcher)) && init_stemmer_or_matcher(tmp, false);
+    this.stemmer = (tmp = options['stemmer'] || (lang && lang.stemmer)) && init_stemmer_or_matcher(tmp, true);
+    this.filter = (tmp = options['filter'] || (lang && lang.filter)) && init_filter(tmp);
 
     if (SUPPORT_CACHE) {
 
-      this.cache = (tmp = options["cache"]) && new Cache(tmp);
+      this.cache = (tmp = options['cache']) && new Cache(tmp);
     }
   }
   //Index.prototype.pipeline = pipeline;
@@ -151,106 +151,106 @@ class Index {
           if (term && (term_length >= this.minlength) && (depth || !dupes[term])) {
 
             let score = get_score(resolution, length, i);
-            let token = "";
+            let token = '';
 
             switch (this.tokenize) {
 
-              case "full":
+            case 'full':
 
-                if (term_length > 3) {
+              if (term_length > 3) {
 
-                  for (let x = 0; x < term_length; x++) {
+                for (let x = 0; x < term_length; x++) {
 
-                    for (let y = term_length; y > x; y--) {
+                  for (let y = term_length; y > x; y--) {
 
-                      if ((y - x) >= this.minlength) {
-
-                        const partial_score = get_score(resolution, length, i, term_length, x);
-                        token = term.substring(x, y);
-                        this.push_index(dupes, token, partial_score, id, _append);
-                      }
-                    }
-                  }
-
-                  break;
-                }
-
-              // fallthrough to next case when term length < 4
-              case "reverse":
-
-                // skip last round (this token exist already in "forward")
-                if (term_length > 2) {
-
-                  for (let x = term_length - 1; x > 0; x--) {
-
-                    token = term[x] + token;
-
-                    if (token.length >= this.minlength) {
+                    if ((y - x) >= this.minlength) {
 
                       const partial_score = get_score(resolution, length, i, term_length, x);
+                      token = term.substring(x, y);
                       this.push_index(dupes, token, partial_score, id, _append);
                     }
                   }
-
-                  token = "";
                 }
+
+                break;
+              }
+
+              // fallthrough to next case when term length < 4
+            case 'reverse':
+
+              // skip last round (this token exist already in "forward")
+              if (term_length > 2) {
+
+                for (let x = term_length - 1; x > 0; x--) {
+
+                  token = term[x] + token;
+
+                  if (token.length >= this.minlength) {
+
+                    const partial_score = get_score(resolution, length, i, term_length, x);
+                    this.push_index(dupes, token, partial_score, id, _append);
+                  }
+                }
+
+                token = '';
+              }
 
               // fallthrough to next case to apply forward also
-              case "forward":
+            case 'forward':
 
-                if (term_length > 1) {
+              if (term_length > 1) {
 
-                  for (let x = 0; x < term_length; x++) {
+                for (let x = 0; x < term_length; x++) {
 
-                    token += term[x];
+                  token += term[x];
 
-                    if (token.length >= this.minlength) {
+                  if (token.length >= this.minlength) {
 
-                      this.push_index(dupes, token, score, id, _append);
-                    }
+                    this.push_index(dupes, token, score, id, _append);
                   }
-
-                  break;
                 }
+
+                break;
+              }
 
               // fallthrough to next case when token has a length of 1
-              default:
-                // case "strict":
-                if (this.boost) {
+            default:
+              // case "strict":
+              if (this.boost) {
 
-                  score = Math.min((score / this.boost(content, term, i)) | 0, resolution - 1);
-                }
+                score = Math.min((score / this.boost(content, term, i)) | 0, resolution - 1);
+              }
 
-                this.push_index(dupes, term, score, id, _append);
+              this.push_index(dupes, term, score, id, _append);
 
-                // context is just supported by tokenizer "strict"
-                if (depth) {
+              // context is just supported by tokenizer "strict"
+              if (depth) {
 
-                  if ((length > 1) && (i < (length - 1))) {
+                if ((length > 1) && (i < (length - 1))) {
 
-                    // check inner dupes to skip repeating words in the current context
-                    const dupes_inner = create_object();
-                    const resolution = this.resolution_ctx;
-                    const keyword = term;
-                    const size = Math.min(depth + 1, length - i);
+                  // check inner dupes to skip repeating words in the current context
+                  const dupes_inner = create_object();
+                  const resolution = this.resolution_ctx;
+                  const keyword = term;
+                  const size = Math.min(depth + 1, length - i);
 
-                    dupes_inner[keyword] = 1;
+                  dupes_inner[keyword] = 1;
 
-                    for (let x = 1; x < size; x++) {
+                  for (let x = 1; x < size; x++) {
 
-                      term = content[this.rtl ? length - 1 - i - x : i + x];
+                    term = content[this.rtl ? length - 1 - i - x : i + x];
 
-                      if (term && (term.length >= this.minlength) && !dupes_inner[term]) {
+                    if (term && (term.length >= this.minlength) && !dupes_inner[term]) {
 
-                        dupes_inner[term] = 1;
+                      dupes_inner[term] = 1;
 
-                        const context_score = get_score(resolution + ((length / 2) > resolution ? 0 : 1), length, i, size - 1, x - 1);
-                        const swap = this.bidirectional && (term > keyword);
-                        this.push_index(dupes_ctx, swap ? keyword : term, context_score, id, _append, swap ? term : keyword);
-                      }
+                      const context_score = get_score(resolution + ((length / 2) > resolution ? 0 : 1), length, i, size - 1, x - 1);
+                      const swap = this.bidirectional && (term > keyword);
+                      this.push_index(dupes_ctx, swap ? keyword : term, context_score, id, _append, swap ? term : keyword);
                     }
                   }
                 }
+              }
             }
           }
         }
@@ -326,7 +326,7 @@ class Index {
       if (!limit && is_object(query)) {
 
         options = /** @type {Object} */ (query);
-        query = options["query"];
+        query = options['query'];
       }
       else if (is_object(limit)) {
 
@@ -340,10 +340,10 @@ class Index {
 
     if (options) {
 
-      limit = options["limit"];
-      offset = options["offset"] || 0;
-      context = options["context"];
-      suggest = SUPPORT_SUGGESTION && options["suggest"];
+      limit = options['limit'];
+      offset = options['offset'] || 0;
+      context = options['context'];
+      suggest = SUPPORT_SUGGESTION && options['suggest'];
     }
 
     if (query) {
@@ -626,33 +626,33 @@ export default Index;
 
 function get_score(resolution, length, i, term_length, x){
 
-    // console.log("resolution", resolution);
-    // console.log("length", length);
-    // console.log("term_length", term_length);
-    // console.log("i", i);
-    // console.log("x", x);
-    // console.log((resolution - 1) / (length + (term_length || 0)) * (i + (x || 0)) + 1);
+  // console.log("resolution", resolution);
+  // console.log("length", length);
+  // console.log("term_length", term_length);
+  // console.log("i", i);
+  // console.log("x", x);
+  // console.log((resolution - 1) / (length + (term_length || 0)) * (i + (x || 0)) + 1);
 
-    // the first resolution slot is reserved for the best match,
-    // when a query matches the first word(s).
+  // the first resolution slot is reserved for the best match,
+  // when a query matches the first word(s).
 
-    // also to stretch score to the whole range of resolution, the
-    // calculation is shift by one and cut the floating point.
-    // this needs the resolution "1" to be handled additionally.
+  // also to stretch score to the whole range of resolution, the
+  // calculation is shift by one and cut the floating point.
+  // this needs the resolution "1" to be handled additionally.
 
-    // do not stretch the resolution more than the term length will
-    // improve performance and memory, also it improves scoring in
-    // most cases between a short document and a long document
+  // do not stretch the resolution more than the term length will
+  // improve performance and memory, also it improves scoring in
+  // most cases between a short document and a long document
 
-    return i && (resolution > 1) ? (
+  return i && (resolution > 1) ? (
 
-        (length + (term_length || 0)) <= resolution ?
+    (length + (term_length || 0)) <= resolution ?
 
-            i + (x || 0)
-        :
-            ((resolution - 1) / (length + (term_length || 0)) * (i + (x || 0)) + 1) | 0
-    ):
-        0;
+      i + (x || 0)
+      :
+      ((resolution - 1) / (length + (term_length || 0)) * (i + (x || 0)) + 1) | 0
+  ):
+    0;
 }
 
 
@@ -660,41 +660,41 @@ function get_score(resolution, length, i, term_length, x){
 
 function single_result(result, limit, offset){
 
-    if(result.length === 1){
+  if(result.length === 1){
 
-        result = result[0];
-    }
-    else{
+    result = result[0];
+  }
+  else{
 
-        result = concat(result);
-    }
+    result = concat(result);
+  }
 
-    return offset || (result.length > limit) ?
+  return offset || (result.length > limit) ?
 
-        result.slice(offset, offset + limit)
+    result.slice(offset, offset + limit)
     :
-        result;
+    result;
 }
 
 function get_array(arr, term, keyword, bidirectional){
 
-    if(keyword){
+  if(keyword){
 
-        // the frequency of the starting letter is slightly less
-        // on the last half of the alphabet (m-z) in almost every latin language,
-        // so we sort downwards (https://en.wikipedia.org/wiki/Letter_frequency)
+    // the frequency of the starting letter is slightly less
+    // on the last half of the alphabet (m-z) in almost every latin language,
+    // so we sort downwards (https://en.wikipedia.org/wiki/Letter_frequency)
 
-        const swap = bidirectional && (term > keyword);
+    const swap = bidirectional && (term > keyword);
 
-        arr = arr[swap ? term : keyword];
-        arr = arr && arr[swap ? keyword : term];
-    }
-    else{
+    arr = arr[swap ? term : keyword];
+    arr = arr && arr[swap ? keyword : term];
+  }
+  else{
 
-        arr = arr[term];
-    }
+    arr = arr[term];
+  }
 
-    return arr;
+  return arr;
 }
 
 
@@ -711,80 +711,80 @@ function get_array(arr, term, keyword, bidirectional){
 
 function remove_index(map, id, res, optimize, resolution){
 
-    let count = 0;
+  let count = 0;
 
-    if(is_array(map)){
+  if(is_array(map)){
 
-        // the first array is the score array in both strategies
+    // the first array is the score array in both strategies
 
-        if(!resolution){
+    if(!resolution){
 
-            resolution = Math.min(map.length, res);
+      resolution = Math.min(map.length, res);
 
-            for(let x = 0, arr; x < resolution; x++){
+      for(let x = 0, arr; x < resolution; x++){
 
-                arr = map[x];
+        arr = map[x];
 
-                if(arr){
+        if(arr){
 
-                    count = remove_index(arr, id, res, optimize, resolution);
+          count = remove_index(arr, id, res, optimize, resolution);
 
-                    if(!optimize && !count){
+          if(!optimize && !count){
 
-                        // when not memory optimized the score index should removed
+            // when not memory optimized the score index should removed
 
-                        delete map[x];
-                    }
-                }
-            }
+            delete map[x];
+          }
         }
-        else{
-
-            const pos = map.indexOf(id);
-
-            if(pos !== -1){
-
-                // fast path, when length is 1 or lower then the whole field gets deleted
-
-                if(map.length > 1){
-
-                    map.splice(pos, 1);
-                    count++;
-                }
-            }
-            else{
-
-                count++;
-            }
-        }
+      }
     }
     else{
 
-        for(let key in map){
+      const pos = map.indexOf(id);
 
-            count = remove_index(map[key], id, res, optimize, resolution);
+      if(pos !== -1){
 
-            if(!count){
+        // fast path, when length is 1 or lower then the whole field gets deleted
 
-                delete map[key];
-            }
+        if(map.length > 1){
+
+          map.splice(pos, 1);
+          count++;
         }
-    }
+      }
+      else{
 
-    return count;
+        count++;
+      }
+    }
+  }
+  else{
+
+    for(let key in map){
+
+      count = remove_index(map[key], id, res, optimize, resolution);
+
+      if(!count){
+
+        delete map[key];
+      }
+    }
+  }
+
+  return count;
 }
 
 if(SUPPORT_CACHE){
 
-    Index.prototype.searchCache = searchCache;
+  Index.prototype.searchCache = searchCache;
 }
 
 if(SUPPORT_SERIALIZE){
-    Index.prototype.export = exportIndexToObject
-    Index.prototype.import = importIndexFromObject
+  Index.prototype.export = exportIndexToObject;
+  Index.prototype.import = importIndexFromObject;
 }
 
 if(SUPPORT_ASYNC){
 
-    apply_async(Index.prototype);
+  apply_async(Index.prototype);
 }

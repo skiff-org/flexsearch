@@ -1,35 +1,35 @@
-const { parentPort } = require("worker_threads");
-const { Index } = require("../flexsearch.bundle.js");
+const { parentPort } = require('worker_threads');
+const { Index } = require('../flexsearch.bundle.js');
 
 let index;
 
-parentPort.on("message", function(data){
+parentPort.on('message', function(data){
 
-    /** @type Index */
-    const args = data["args"];
-    const task = data["task"];
-    const id = data["id"];
+  /** @type Index */
+  const args = data['args'];
+  const task = data['task'];
+  const id = data['id'];
 
-    switch(task){
+  switch(task){
 
-        case "init":
+  case 'init':
 
-            const options = data["options"] || {};
-            const encode = options["encode"];
+    const options = data['options'] || {};
+    const encode = options['encode'];
 
-            options["cache"] = false;
+    options['cache'] = false;
 
-            if(encode && (encode.indexOf("function") === 0)){
+    if(encode && (encode.indexOf('function') === 0)){
 
-                options["encode"] = new Function("return " + encode)();
-            }
-
-            index = new Index(options);
-            break;
-
-        default:
-
-            const message = index[task].apply(index, args);
-            parentPort.postMessage(task === "search" ? { "id": id, "msg": message } : { "id": id });
+      options['encode'] = new Function('return ' + encode)();
     }
+
+    index = new Index(options);
+    break;
+
+  default:
+
+    const message = index[task].apply(index, args);
+    parentPort.postMessage(task === 'search' ? { 'id': id, 'msg': message } : { 'id': id });
+  }
 });

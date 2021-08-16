@@ -1,12 +1,12 @@
-import { IndexInterface } from "../../type.js";
-import { pipeline } from "../../lang.js";
+import { IndexInterface } from '../../type.js';
+import { pipeline } from '../../lang.js';
 
 export const rtl = false;
-export const tokenize = "";
+export const tokenize = '';
 export default {
-    encode: encode,
-    rtl: rtl
-}
+  encode: encode,
+  rtl: rtl
+};
 
 const regex = /[\x00-\x7F]+/g;
 const split = /\s+/;
@@ -17,12 +17,12 @@ const split = /\s+/;
 
 export function encode(str){
 
-    return pipeline.call(
+  return pipeline.call(
 
-        this,
-        /* string: */ str.replace(regex, " "),
-        /* normalize: */ false,
-        /* split: */ split,
-        /* collapse: */ false
-    );
+    this,
+    /* string: */ str.replace(regex, ' '),
+    /* normalize: */ false,
+    /* split: */ split,
+    /* collapse: */ false
+  );
 }
