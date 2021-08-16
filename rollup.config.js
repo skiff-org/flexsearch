@@ -3,13 +3,15 @@
 import pkg from './package.json';
 import { terser } from 'rollup-plugin-terser';
 
-export default {
-  input: 'src/lib.js',
-  output: {
-    name: pkg.name,
-    file: pkg.browser,
-    format: 'umd'
-  },
-  plugins: terser()
-}
+export default [
+  {
+    input: 'src/lib.js',
+    output: {
+      name: pkg.name,
+      file: pkg.browser,
+      format: 'umd'
+    },
+    plugins: terser()
+  }
+]
 
