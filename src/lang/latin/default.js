@@ -1,4 +1,3 @@
-import { IndexInterface } from '../../type.js';
 import { pipeline, normalize, regex_whitespace } from '../../lang.js';
 
 export const rtl = false;

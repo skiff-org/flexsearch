@@ -1,4 +1,3 @@
-import { IndexInterface, DocumentInterface } from './type.js';
 //import { promise as Promise } from "./polyfill.js";
 import { is_function, is_object, is_string } from './common.js';
 

@@ -1,4 +1,3 @@
-import { IndexInterface } from '../../type.js';
 import { pipeline } from '../../lang.js';
 
 export const rtl = true;

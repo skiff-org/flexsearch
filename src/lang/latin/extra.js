@@ -1,4 +1,3 @@
-import { IndexInterface } from '../../type.js';
 import { regex, replace, collapse } from '../../lang.js';
 import { encode as encode_advanced } from './advanced.js';
 

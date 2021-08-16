@@ -7,7 +7,6 @@
  */
 
 import Index from './index.js';
-import { DocumentInterface } from './type.js';
 import Cache, { searchCache } from './cache.js';
 import { create_object, is_array, is_string, is_object, parse_option, get_keys } from './common.js';
 import apply_async from './async.js';

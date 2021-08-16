@@ -1,4 +1,3 @@
-import { IndexInterface } from './type.js';
 import { create_object, get_keys } from './common.js';
 
 /**

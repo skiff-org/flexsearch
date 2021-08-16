@@ -1,4 +1,3 @@
-import { IndexInterface } from '../../type.js';
 import { encode as encode_simple } from './simple.js';
 
 // custom soundex implementation

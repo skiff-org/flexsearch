@@ -1,4 +1,3 @@
-import { IndexInterface, DocumentInterface } from './type.js';
 import { create_object, is_object } from './common.js';
 
 /**
