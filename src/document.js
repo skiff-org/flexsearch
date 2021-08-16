@@ -35,31 +35,21 @@ export class Document {
     this.key = ((opt = document['key'] || document['id']) && parse_tree(opt, this.marker)) || 'id';
     this.fastupdate = parse_option(options['fastupdate'], true);
 
-    if (SUPPORT_STORE) {
       this.storetree = (opt = document['store']) && (opt !== true) && [];
       this.store = opt && create_object();
-    }
 
-    if (SUPPORT_TAGS) {
       this.tag = ((opt = document['tag']) && parse_tree(opt, this.marker));
       this.tagindex = opt && create_object();
-    }
 
-    if (SUPPORT_CACHE) {
       this.cache = (opt = options['cache']) && new Cache(opt);
 
       // do not apply cache again for the indexes
       options['cache'] = false;
-    }
 
-    if (SUPPORT_WORKER) {
       this.worker = options['worker'];
-    }
 
-    if (SUPPORT_ASYNC) {
       // this switch is used by recall of promise callbacks
       this.async = false;
-    }
 
     this.index = parse_descriptor.call(this, options, document);
   }
@@ -92,7 +82,7 @@ export class Document {
         add_index(content, tree, this.marker, 0, this.index[field], id, tree[0], _append);
       }
 
-      if (SUPPORT_TAGS && this.tag) {
+      if (this.tag) {
         let tag = parse_simple(content, this.tag);
         let dupes = create_object();
 
@@ -121,7 +111,7 @@ export class Document {
       }
 
       // TODO: how to handle store when appending contents?
-      if (SUPPORT_STORE && this.store && (!_append || !this.store[id])) {
+      if (this.store && (!_append || !this.store[id])) {
         let store;
 
         if (this.storetree) {
@@ -167,7 +157,7 @@ export class Document {
         }
       }
 
-      if (SUPPORT_TAGS && this.tag) {
+      if (this.tag) {
         // when fastupdate was enabled all ids are already removed
         if (!this.fastupdate) {
           for (let key in this.tagindex) {
@@ -186,7 +176,7 @@ export class Document {
         }
       }
 
-      if (SUPPORT_STORE && this.store) {
+      if (this.store) {
         delete this.store[id];
       }
 
@@ -226,8 +216,8 @@ export class Document {
       else {
         pluck = options['pluck'];
         field = pluck || options['index'] || options['field'] /*|| (is_string(options) && [options])*/;
-        tag = SUPPORT_TAGS && options['tag'];
-        enrich = SUPPORT_STORE && this.store && options['enrich'];
+        tag = options['tag'];
+        enrich = this.store && options['enrich'];
         bool = options['bool'] === 'and';
         limit = options['limit'] || 100;
         offset = options['offset'] || 0;
@@ -453,7 +443,7 @@ class parse_descriptor {
       this.field[i] = key;
     }
 
-    if (SUPPORT_STORE && this.storetree) {
+    if (this.storetree) {
       let store = document['store'];
 
       if (is_string(store)) {

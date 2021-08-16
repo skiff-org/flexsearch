@@ -31,9 +31,7 @@ export class Index {
     let charset, lang, tmp;
 
     if (options) {
-      if (SUPPORT_ENCODER) {
         options = apply_preset(options);
-      }
 
       charset = options['charset'];
       lang = options['lang'];
@@ -76,9 +74,7 @@ export class Index {
     this.stemmer = (tmp = options['stemmer'] || (lang && lang.stemmer)) && init_stemmer_or_matcher(tmp, true);
     this.filter = (tmp = options['filter'] || (lang && lang.filter)) && init_filter(tmp);
 
-    if (SUPPORT_CACHE) {
       this.cache = (tmp = options['cache']) && new Cache(tmp);
-    }
   }
   //Index.prototype.pipeline = pipeline;
   /**
@@ -280,7 +276,7 @@ export class Index {
       limit = options['limit'];
       offset = options['offset'] || 0;
       context = options['context'];
-      suggest = SUPPORT_SUGGESTION && options['suggest'];
+      suggest = options['suggest'];
     }
 
     if (query) {
@@ -496,7 +492,7 @@ export class Index {
 
       _skip_deletion || delete this.register[id];
 
-      if (SUPPORT_CACHE && this.cache) {
+      if (this.cache) {
         this.cache.del(id);
       }
     }
