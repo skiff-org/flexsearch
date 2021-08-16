@@ -405,7 +405,7 @@ export class Document {
     result.store    = obj.store;
     result.field    = obj.field;
     Object.entries(obj.index).forEach(([key, exportedIndex]) => {
-      result.index[key].import(exportedIndex);
+      result.index[key] = Index.deserialize(exportedIndex);
       result.index[key].register = obj.reg;
     });
     return result;
