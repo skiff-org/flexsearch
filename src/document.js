@@ -8,15 +8,9 @@
 
 import Index from './index.js';
 import Cache, { searchCache } from './cache.js';
-import { create_object, is_array, is_string, is_object, parse_option, get_keys } from './common.js';
+import { create_object, is_array, is_string, is_object, parse_option } from './common.js';
 import apply_async from './async.js';
 import { intersect, intersect_union } from './intersect.js';
-import {
-  exportDocument,
-  importDocument,
-  exportDocumentToObject,
-  importDocumentFromObject
-} from './serialize.js';
 import WorkerIndex from './worker/index.js';
 
 /**
@@ -26,7 +20,7 @@ import WorkerIndex from './worker/index.js';
  * @return {Document}
  */
 
-class Document {
+export class Document {
   constructor(options) {
     if (!(this instanceof Document)) {
       return new Document(options);
@@ -68,7 +62,6 @@ class Document {
       this.async = false;
     }
 
-    /** @export */
     this.index = parse_descriptor.call(this, options, document);
   }
   /**
@@ -396,7 +389,7 @@ class Document {
   }
 
   /**
-   * Convert `this` into an export object
+   * Serialize `this` into an exportable object
    */
   serialize() {
     const result = {
@@ -407,13 +400,13 @@ class Document {
       index: {}
     };
     Object.entries(this.index).forEach(([key, index]) => {
-      result.index[key] = index.export();
+      result.index[key] = index.serialize();
     });
     return result;
   }
 
   /**
-   * Create a `Document` from an exported object
+   * Create a `Document` from a serialized object
    */
   static deserialize(obj) {
     // TODO add properties here?
@@ -429,8 +422,6 @@ class Document {
     return result;
   }
 }
-
-export default Document;
 
 /**
  * @this Document
@@ -649,21 +640,6 @@ function apply_enrich(res){
   return arr;
 }
 
-
-if(SUPPORT_STORE){
-
-
-}
-
-if(SUPPORT_CACHE){
-  Document.prototype.searchCache = searchCache;
-}
-
-if(SUPPORT_SERIALIZE){
-  Document.prototype.export = exportDocumentToObject;
-  Document.prototype.import = importDocumentFromObject;
-}
-
-if(SUPPORT_ASYNC){
-  apply_async(Document.prototype);
-}
+// TODO move all of this into this file
+Document.prototype.searchCache = searchCache;
+apply_async(Document.prototype);

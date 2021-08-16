@@ -8,7 +8,7 @@
 
 import { encode as default_encoder } from './lang/latin/default.js';
 import { create_object, create_object_array, concat, sort_by_length_down, is_array, is_string, is_object, parse_option } from './common.js';
-import { pipeline, init_stemmer_or_matcher, init_filter } from './lang.js';
+import { init_stemmer_or_matcher, init_filter } from './lang.js';
 import { global_lang, global_charset } from './global.js';
 import apply_async from './async.js';
 import { intersect } from './intersect.js';
@@ -22,7 +22,7 @@ import apply_preset from './preset.js';
  * @return {Index}
  */
 
-class Index {
+export class Index {
   constructor(options, _register) {
     if (!(this instanceof Index)) {
       return new Index(options);
@@ -531,8 +531,6 @@ class Index {
   }
 }
 
-export default Index;
-
 
 
 /**
@@ -674,15 +672,6 @@ function remove_index(map, id, res, optimize, resolution){
   return count;
 }
 
-if(SUPPORT_CACHE){
-  Index.prototype.searchCache = searchCache;
-}
-
-if(SUPPORT_SERIALIZE){
-  Index.prototype.export = exportIndexToObject;
-  Index.prototype.import = importIndexFromObject;
-}
-
-if(SUPPORT_ASYNC){
-  apply_async(Index.prototype);
-}
+// TODO bring all these functions into this file
+Index.prototype.searchCache = searchCache;
+apply_async(Index.prototype);
