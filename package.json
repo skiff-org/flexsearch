@@ -2,7 +2,7 @@
   "name": "flexsearch",
   "version": "0.7.21",
   "description": "Next-Generation full text search library with zero dependencies.",
-  "homepage": "https://github.com/nextapps-de/flexsearch/",
+  "homepage": "https://github.com/skiff-org/flexsearch/",
   "author": "Thomas Wilkerling",
   "copyright": "Nextapps GmbH",
   "license": "Apache-2.0",
@@ -17,7 +17,7 @@
     "search engine"
   ],
   "bugs": {
-    "url": "https://github.com/nextapps-de/flexsearch/issues",
+    "url": "https://github.com/skiff-org/flexsearch/issues",
     "email": "info@nextapps.de"
   },
   "main": "dist/flexsearch.bundle.js",
@@ -26,7 +26,7 @@
   "preferGlobal": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/nextapps-de/flexsearch.git"
+    "url": "https://github.com/skiff-org/flexsearch.git"
   },
   "scripts": {
     "copy": "npm run clean && cpx \"src/**\" tmp/",
