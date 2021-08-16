@@ -1134,7 +1134,10 @@ R.prototype.import = function(a) {
   this.register = a.reg;
   this.store = a.store;
   this.field = a.field;
-  Object.entries(a.index).forEach(([b, c]) => this.index[b].import(c));
+  Object.entries(a.index).forEach(([b, c]) => {
+    this.index[b].import(c);
+    this.index[b].register = a.reg;
+  });
 };
 ka(R.prototype);
 var ya = {encode:xa, rtl:!1, tokenize:""};

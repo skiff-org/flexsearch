@@ -59,8 +59,10 @@ export function importDocumentFromObject(obj) {
   this.register = obj.reg;
   this.store    = obj.store;
   this.field    = obj.field;
-  Object.entries(obj.index).forEach(([key, exportedIndex]) =>
-    this.index[key].import(exportedIndex));
+  Object.entries(obj.index).forEach(([key, exportedIndex]) => {
+    this.index[key].import(exportedIndex);
+    this.index[key].register = obj.reg;
+  });
 }
 
 async function lazyExport(callback, self, key, index_doc, index, data){
