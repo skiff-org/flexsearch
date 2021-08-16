@@ -68,24 +68,18 @@ const preset = {
 };
 
 export default function apply_preset(options){
-
   if(is_string(options)){
-
     if(!preset[options]){
-
       console.warn('Preset not found: ' + options);
     }
 
     options = preset[options];
   }
   else{
-
     const preset = options['preset'];
 
     if(preset){
-
       if(!preset[preset]){
-
         console.warn('Preset not found: ' + preset);
       }
 

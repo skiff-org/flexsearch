@@ -46,7 +46,6 @@ const pairs = [
  */
 
 export function encode(str){
-
   str = '' + str;
 
   return pipeline.call(

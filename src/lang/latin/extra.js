@@ -40,24 +40,19 @@ const pairs = [
  */
 
 export function encode(str){
-
   if(str){
-
     str = encode_advanced.call(this, str, /* skip post-processing: */ true);
 
     if(str.length > 1){
-
       //str = replace(str, pairs);
       str = str.replace(regex_vowel, '');
     }
 
     if(str.length > 1){
-
       str = collapse(str);
     }
 
     if(str){
-
       str = str.split(' ');
     }
   }

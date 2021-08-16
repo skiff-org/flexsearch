@@ -10,23 +10,18 @@ let pid = 0;
  */
 
 function WorkerIndex(options){
-
   if(!(this instanceof WorkerIndex)) {
-
     return new WorkerIndex(options);
   }
 
   let opt;
 
   if(options){
-
     if(is_function(opt = options['encode'])){
-
       options['encode'] = opt.toString();
     }
   }
   else{
-
     options = {};
   }
 
@@ -36,7 +31,6 @@ function WorkerIndex(options){
   let factory = (self||window)['_factory'];
 
   if(factory){
-
     factory = factory.toString();
   }
 
@@ -47,22 +41,17 @@ function WorkerIndex(options){
   this.resolver = create_object();
 
   if(!this.worker){
-
     return;
   }
 
   if(is_node_js){
-
     this.worker['on']('message', function(msg){
-
       _self.resolver[msg['id']](msg['msg']) ;
       delete _self.resolver[msg['id']];
     });
   }
   else{
-
     this.worker.onmessage = function(msg){
-
       msg = msg['data'];
       _self.resolver[msg['id']](msg['msg']);
       delete _self.resolver[msg['id']];
@@ -86,25 +75,20 @@ register('update');
 register('remove');
 
 function register(key){
-
   WorkerIndex.prototype[key] =
     WorkerIndex.prototype[key + 'Async'] = function(){
-
       const self = this;
       const args = [].slice.call(arguments);
       const arg = args[args.length - 1];
       let callback;
 
       if(is_function(arg)){
-
         callback = arg;
         args.splice(args.length - 1, 1);
       }
 
       const promise = new Promise(function(resolve){
-
         setTimeout(function(){
-
           self.resolver[++pid] = resolve;
           self.worker.postMessage({
 
@@ -116,23 +100,19 @@ function register(key){
       });
 
       if(callback){
-
         promise.then(callback);
         return this;
       }
       else{
-
         return promise;
       }
     };
 }
 
 function create(factory, is_node_js, worker_path){
-
   let worker;
 
   try{
-
     worker = is_node_js ?
 
       eval('new (require("worker_threads")["Worker"])("../dist/node/node.js")')

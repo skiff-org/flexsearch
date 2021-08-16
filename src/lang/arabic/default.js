@@ -16,7 +16,6 @@ const split = /\s+/;
  */
 
 export function encode(str){
-
   return pipeline.call(
 
     this,

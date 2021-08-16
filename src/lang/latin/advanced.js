@@ -62,25 +62,19 @@ const pairs = [
  */
 
 export function encode(str, _skip_postprocessing){
-
   if(str){
-
     str = encode_balance.call(this, str).join(' ');
 
     if(str.length > 2){
-
       str = replace(str, pairs);
     }
 
     if(!_skip_postprocessing){
-
       if(str.length > 1){
-
         str = collapse(str);
       }
 
       if(str){
-
         str = str.split(' ');
       }
     }

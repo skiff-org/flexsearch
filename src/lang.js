@@ -11,31 +11,24 @@ import { create_object, get_keys } from './common.js';
  */
 
 export function pipeline(str, normalize, split, _collapse){
-
   if(str){
-
     if(normalize){
-
       str = replace(str, /** @type {Array<string|RegExp>} */ (normalize));
     }
 
     if(this.matcher){
-
       str = replace(str, this.matcher);
     }
 
     if(this.stemmer && (str.length > 1)){
-
       str = replace(str, this.stemmer);
     }
 
     if(_collapse && (str.length > 1)){
-
       str = collapse(str);
     }
 
     if(split || (split === '')){
-
       const words = str.split(/** @type {string|RegExp} */ (split));
 
       return this.filter ? filter(words, this.filter) : words;
@@ -49,9 +42,7 @@ export const regex_whitespace = /[\p{Z}\p{S}\p{P}\p{C}]+/u;
 const regex_normalize = /[\u0300-\u036f]/g;
 
 export function normalize(str){
-
   if(str.normalize){
-
     str = str.normalize('NFD').replace(regex_normalize, '');
   }
 
@@ -152,11 +143,9 @@ export function normalize(str){
  */
 
 export function init_filter(words){
-
   const filter = create_object();
 
   for(let i = 0, length = words.length; i < length; i++){
-
     filter[words[i]] = 1;
   }
 
@@ -170,7 +159,6 @@ export function init_filter(words){
  */
 
 export function init_stemmer_or_matcher(obj, is_stemmer){
-
   const keys = get_keys(obj);
   const length = keys.length;
   const final = [];
@@ -178,23 +166,19 @@ export function init_stemmer_or_matcher(obj, is_stemmer){
   let removal = '', count = 0;
 
   for(let i = 0, key, tmp; i < length; i++){
-
     key = keys[i];
     tmp = obj[key];
 
     if(tmp){
-
       final[count++] = regex(is_stemmer ? '(?!\\b)' + key + '(\\b|_)' : key);
       final[count++] = tmp;
     }
     else{
-
       removal += (removal ? '|' : '') + key;
     }
   }
 
   if(removal){
-
     final[count++] = regex(is_stemmer ? '(?!\\b)(' + removal + ')(\\b|_)' : '(' + removal + ')');
     final[count] = '';
   }
@@ -210,13 +194,10 @@ export function init_stemmer_or_matcher(obj, is_stemmer){
  */
 
 export function replace(str, regexp){
-
   for(let i = 0, len = regexp.length; i < len; i += 2){
-
     str = str.replace(regexp[i], regexp[i + 1]);
 
     if(!str){
-
       break;
     }
   }
@@ -230,7 +211,6 @@ export function replace(str, regexp){
  */
 
 export function regex(str){
-
   return new RegExp(str, 'g');
 }
 
@@ -241,13 +221,10 @@ export function regex(str){
  */
 
 export function collapse(string){
-
   let final = '', prev = '';
 
   for(let i = 0, len = string.length, char; i < len; i++){
-
     if((char = string[i]) !== prev){
-
       final += (prev = char);
     }
   }
@@ -257,16 +234,13 @@ export function collapse(string){
 
 // TODO using fast-swap
 export function filter(words, map){
-
   const length = words.length;
   const filtered = [];
 
   for(let i = 0, count = 0; i < length; i++){
-
     const word = words[i];
 
     if(word && !map[word]){
-
       filtered[count++] = word;
     }
   }

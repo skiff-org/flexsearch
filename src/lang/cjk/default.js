@@ -16,7 +16,6 @@ const regex = /[\x00-\x7F]+/g;
  */
 
 export function encode(str){
-
   return pipeline.call(
 
     this,

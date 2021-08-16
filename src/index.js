@@ -26,18 +26,14 @@ import apply_preset from './preset.js';
 
 class Index {
   constructor(options, _register) {
-
     if (!(this instanceof Index)) {
-
       return new Index(options);
     }
 
     let charset, lang, tmp;
 
     if (options) {
-
       if (SUPPORT_ENCODER) {
-
         options = apply_preset(options);
       }
 
@@ -45,9 +41,7 @@ class Index {
       lang = options['lang'];
 
       if (is_string(charset)) {
-
         if (charset.indexOf(':') === -1) {
-
           charset += ':default';
         }
 
@@ -55,12 +49,10 @@ class Index {
       }
 
       if (is_string(lang)) {
-
         lang = global_lang[lang];
       }
     }
     else {
-
       options = {};
     }
 
@@ -87,7 +79,6 @@ class Index {
     this.filter = (tmp = options['filter'] || (lang && lang.filter)) && init_filter(tmp);
 
     if (SUPPORT_CACHE) {
-
       this.cache = (tmp = options['cache']) && new Cache(tmp);
     }
   }
@@ -97,7 +88,6 @@ class Index {
    * @param {!string} content
    */
   append(id, content) {
-
     return this.add(id, content, true);
   }
   /**
@@ -107,11 +97,8 @@ class Index {
    * @param {boolean=} _skip_update
    */
   add(id, content, _append, _skip_update) {
-
     if (content && (id || (id === 0))) {
-
       if (!_skip_update && !_append && this.register[id]) {
-
         return this.update(id, content);
       }
 
@@ -119,7 +106,6 @@ class Index {
       const length = content.length;
 
       if (length) {
-
         // check context dupes to skip all contextual redundancy along a document
         const dupes_ctx = create_object();
         const dupes = create_object();
@@ -127,28 +113,21 @@ class Index {
         const resolution = this.resolution;
 
         for (let i = 0; i < length; i++) {
-
           let term = content[this.rtl ? length - 1 - i : i];
           let term_length = term.length;
 
           // skip dupes will break the context chain
           if (term && (term_length >= this.minlength) && (depth || !dupes[term])) {
-
             let score = get_score(resolution, length, i);
             let token = '';
 
             switch (this.tokenize) {
-
             case 'full':
 
               if (term_length > 3) {
-
                 for (let x = 0; x < term_length; x++) {
-
                   for (let y = term_length; y > x; y--) {
-
                     if ((y - x) >= this.minlength) {
-
                       const partial_score = get_score(resolution, length, i, term_length, x);
                       token = term.substring(x, y);
                       this.push_index(dupes, token, partial_score, id, _append);
@@ -164,13 +143,10 @@ class Index {
 
               // skip last round (this token exist already in "forward")
               if (term_length > 2) {
-
                 for (let x = term_length - 1; x > 0; x--) {
-
                   token = term[x] + token;
 
                   if (token.length >= this.minlength) {
-
                     const partial_score = get_score(resolution, length, i, term_length, x);
                     this.push_index(dupes, token, partial_score, id, _append);
                   }
@@ -183,13 +159,10 @@ class Index {
             case 'forward':
 
               if (term_length > 1) {
-
                 for (let x = 0; x < term_length; x++) {
-
                   token += term[x];
 
                   if (token.length >= this.minlength) {
-
                     this.push_index(dupes, token, score, id, _append);
                   }
                 }
@@ -201,7 +174,6 @@ class Index {
             default:
               // case "strict":
               if (this.boost) {
-
                 score = Math.min((score / this.boost(content, term, i)) | 0, resolution - 1);
               }
 
@@ -209,9 +181,7 @@ class Index {
 
               // context is just supported by tokenizer "strict"
               if (depth) {
-
                 if ((length > 1) && (i < (length - 1))) {
-
                   // check inner dupes to skip repeating words in the current context
                   const dupes_inner = create_object();
                   const resolution = this.resolution_ctx;
@@ -221,11 +191,9 @@ class Index {
                   dupes_inner[keyword] = 1;
 
                   for (let x = 1; x < size; x++) {
-
                     term = content[this.rtl ? length - 1 - i - x : i + x];
 
                     if (term && (term.length >= this.minlength) && !dupes_inner[term]) {
-
                       dupes_inner[term] = 1;
 
                       const context_score = get_score(resolution + ((length / 2) > resolution ? 0 : 1), length, i, size - 1, x - 1);
@@ -255,42 +223,34 @@ class Index {
    * @param {string=} keyword
    */
   push_index(dupes, value, score, id, append, keyword) {
-
     let arr = keyword ? this.ctx : this.map;
 
     if (!dupes[value] || (keyword && !dupes[value][keyword])) {
-
       if (this.optimize) {
-
         arr = arr[score];
       }
 
       if (keyword) {
-
         dupes = dupes[value] || (dupes[value] = create_object());
         dupes[keyword] = 1;
 
         arr = arr[keyword] || (arr[keyword] = create_object());
       }
       else {
-
         dupes[value] = 1;
       }
 
       arr = arr[value] || (arr[value] = []);
 
       if (!this.optimize) {
-
         arr = arr[score] || (arr[score] = []);
       }
 
       if (!append || (arr.indexOf(id) === -1)) {
-
         arr[arr.length] = id;
 
         // add a reference to the register for fast updates
         if (this.fastupdate) {
-
           const tmp = this.register[id] || (this.register[id] = []);
           tmp[tmp.length] = arr;
         }
@@ -304,16 +264,12 @@ class Index {
    * @returns {Array<number|string>}
    */
   search(query, limit, options) {
-
     if (!options) {
-
       if (!limit && is_object(query)) {
-
         options = /** @type {Object} */ (query);
         query = options['query'];
       }
       else if (is_object(limit)) {
-
         options = /** @type {Object} */ (limit);
       }
     }
@@ -323,7 +279,6 @@ class Index {
     let context, suggest, offset = 0;
 
     if (options) {
-
       limit = options['limit'];
       offset = options['offset'] || 0;
       context = options['context'];
@@ -331,30 +286,24 @@ class Index {
     }
 
     if (query) {
-
       query = /** @type {Array} */ (this.encode(query));
       length = query.length;
 
       // TODO: solve this in one single loop below
       if (length > 1) {
-
         const dupes = create_object();
         const query_new = [];
 
         for (let i = 0, count = 0, term; i < length; i++) {
-
           term = query[i];
 
           if (term && (term.length >= this.minlength) && !dupes[term]) {
-
             // this fast path just could applied when not in memory-optimized mode
             if (!this.optimize && !suggest && !this.map[term]) {
-
               // fast path "not found"
               return result;
             }
             else {
-
               query_new[count++] = term;
               dupes[term] = 1;
             }
@@ -367,7 +316,6 @@ class Index {
     }
 
     if (!length) {
-
       return result;
     }
 
@@ -377,27 +325,22 @@ class Index {
     let index = 0, keyword;
 
     if (depth) {
-
       keyword = query[0];
       index = 1;
     }
     else {
-
       if (length > 1) {
-
         query.sort(sort_by_length_down);
       }
     }
 
     for (let arr, term; index < length; index++) {
-
       term = query[index];
 
       // console.log(keyword);
       // console.log(term);
       // console.log("");
       if (depth) {
-
         arr = this.add_result(result, suggest, limit, offset, length === 2, term, keyword);
 
         // console.log(arr);
@@ -405,29 +348,23 @@ class Index {
         // when suggestion enabled just forward keyword if term was found
         // as long as the result is empty forward the pointer also
         if (!suggest || (arr !== false) || !result.length) {
-
           keyword = term;
         }
       }
       else {
-
         arr = this.add_result(result, suggest, limit, offset, length === 1, term);
       }
 
       if (arr) {
-
         return /** @type {Array<number|string>} */ (arr);
       }
 
       // apply suggestions on last loop or fallback
       if (suggest && (index === length - 1)) {
-
         let length = result.length;
 
         if (!length) {
-
           if (depth) {
-
             // fallback to non-contextual search when no result was found
             depth = 0;
             index = -1;
@@ -438,7 +375,6 @@ class Index {
           return result;
         }
         else if (length === 1) {
-
           // fast path optimization
           return single_result(result[0], limit, offset);
         }
@@ -463,45 +399,35 @@ class Index {
    * @return {Array<Array<string|number>>|boolean|undefined}
    */
   add_result(result, suggest, limit, offset, single_term, term, keyword) {
-
     let word_arr = [];
     let arr = keyword ? this.ctx : this.map;
 
     if (!this.optimize) {
-
       arr = get_array(arr, term, keyword, this.bidirectional);
     }
 
     if (arr) {
-
       let count = 0;
       const arr_len = Math.min(arr.length, keyword ? this.resolution_ctx : this.resolution);
 
       // relevance:
       for (let x = 0, size = 0, tmp, len; x < arr_len; x++) {
-
         tmp = arr[x];
 
         if (tmp) {
-
           if (this.optimize) {
-
             tmp = get_array(tmp, term, keyword, this.bidirectional);
           }
 
           if (offset) {
-
             if (tmp && single_term) {
-
               len = tmp.length;
 
               if (len <= offset) {
-
                 offset -= len;
                 tmp = null;
               }
               else {
-
                 tmp = tmp.slice(offset);
                 offset = 0;
               }
@@ -509,18 +435,15 @@ class Index {
           }
 
           if (tmp) {
-
             // keep score (sparse array):
             //word_arr[x] = tmp;
             // simplified score order:
             word_arr[count++] = tmp;
 
             if (single_term) {
-
               size += tmp.length;
 
               if (size >= limit) {
-
                 // fast path optimization
                 break;
               }
@@ -530,9 +453,7 @@ class Index {
       }
 
       if (count) {
-
         if (single_term) {
-
           // fast path optimization
           // offset was already applied at this point
           return single_result(word_arr, limit, 0);
@@ -548,37 +469,29 @@ class Index {
     return !suggest && word_arr;
   }
   contain(id) {
-
     return !!this.register[id];
   }
   update(id, content) {
-
     return this.remove(id).add(id, content);
   }
   /**
    * @param {boolean=} _skip_deletion
    */
   remove(id, _skip_deletion) {
-
     const refs = this.register[id];
 
     if (refs) {
-
       if (this.fastupdate) {
-
         // fast updates performs really fast but did not fully cleanup the key entries
         for (let i = 0, tmp; i < refs.length; i++) {
-
           tmp = refs[i];
           tmp.splice(tmp.indexOf(id), 1);
         }
       }
       else {
-
         remove_index(this.map, id, this.resolution, this.optimize);
 
         if (this.depth) {
-
           remove_index(this.ctx, id, this.resolution_ctx, this.optimize);
         }
       }
@@ -586,7 +499,6 @@ class Index {
       _skip_deletion || delete this.register[id];
 
       if (SUPPORT_CACHE && this.cache) {
-
         this.cache.del(id);
       }
     }
@@ -635,7 +547,6 @@ export default Index;
  */
 
 function get_score(resolution, length, i, term_length, x){
-
   // console.log("resolution", resolution);
   // console.log("length", length);
   // console.log("term_length", term_length);
@@ -669,13 +580,10 @@ function get_score(resolution, length, i, term_length, x){
 
 
 function single_result(result, limit, offset){
-
   if(result.length === 1){
-
     result = result[0];
   }
   else{
-
     result = concat(result);
   }
 
@@ -687,9 +595,7 @@ function single_result(result, limit, offset){
 }
 
 function get_array(arr, term, keyword, bidirectional){
-
   if(keyword){
-
     // the frequency of the starting letter is slightly less
     // on the last half of the alphabet (m-z) in almost every latin language,
     // so we sort downwards (https://en.wikipedia.org/wiki/Letter_frequency)
@@ -700,7 +606,6 @@ function get_array(arr, term, keyword, bidirectional){
     arr = arr && arr[swap ? keyword : term];
   }
   else{
-
     arr = arr[term];
   }
 
@@ -720,27 +625,21 @@ function get_array(arr, term, keyword, bidirectional){
  */
 
 function remove_index(map, id, res, optimize, resolution){
-
   let count = 0;
 
   if(is_array(map)){
-
     // the first array is the score array in both strategies
 
     if(!resolution){
-
       resolution = Math.min(map.length, res);
 
       for(let x = 0, arr; x < resolution; x++){
-
         arr = map[x];
 
         if(arr){
-
           count = remove_index(arr, id, res, optimize, resolution);
 
           if(!optimize && !count){
-
             // when not memory optimized the score index should removed
 
             delete map[x];
@@ -749,33 +648,26 @@ function remove_index(map, id, res, optimize, resolution){
       }
     }
     else{
-
       const pos = map.indexOf(id);
 
       if(pos !== -1){
-
         // fast path, when length is 1 or lower then the whole field gets deleted
 
         if(map.length > 1){
-
           map.splice(pos, 1);
           count++;
         }
       }
       else{
-
         count++;
       }
     }
   }
   else{
-
     for(let key in map){
-
       count = remove_index(map[key], id, res, optimize, resolution);
 
       if(!count){
-
         delete map[key];
       }
     }
@@ -785,7 +677,6 @@ function remove_index(map, id, res, optimize, resolution){
 }
 
 if(SUPPORT_CACHE){
-
   Index.prototype.searchCache = searchCache;
 }
 
@@ -795,6 +686,5 @@ if(SUPPORT_SERIALIZE){
 }
 
 if(SUPPORT_ASYNC){
-
   apply_async(Index.prototype);
 }

@@ -4,14 +4,12 @@ const { Index } = require('../flexsearch.bundle.js');
 let index;
 
 parentPort.on('message', function(data){
-
   /** @type Index */
   const args = data['args'];
   const task = data['task'];
   const id = data['id'];
 
   switch(task){
-
   case 'init':
 
     const options = data['options'] || {};
@@ -20,7 +18,6 @@ parentPort.on('message', function(data){
     options['cache'] = false;
 
     if(encode && (encode.indexOf('function') === 0)){
-
       options['encode'] = new Function('return ' + encode)();
     }
 

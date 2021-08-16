@@ -14,7 +14,6 @@ export default {
  */
 
 export function encode(str){
-
   return pipeline.call(
 
     this,

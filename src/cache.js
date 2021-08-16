@@ -7,7 +7,6 @@ import { create_object, is_object } from './common.js';
  */
 
 function CacheClass(limit){
-
   /** @private */
   this.limit = (limit !== true) && limit;
 
@@ -31,16 +30,13 @@ export default CacheClass;
  */
 
 export function searchCache(query, limit, options){
-
   if(is_object(query)){
-
     query = query['query'];
   }
 
   let cache = this.cache.get(query);
 
   if(!cache){
-
     cache = this.search(query, limit, options);
     this.cache.set(query, cache);
   }
@@ -58,9 +54,7 @@ export function searchCache(query, limit, options){
 // };
 
 CacheClass.prototype.set = function(key, value){
-
   if(!this.cache[key]){
-
     // it is just a shame that native function array.shift() performs so bad
 
     // const length = this.queue.length;
@@ -105,16 +99,13 @@ CacheClass.prototype.set = function(key, value){
     let length = this.queue.length;
 
     if(length === this.limit){
-
       delete this.cache[this.queue[length - 1]];
     }
     else{
-
       length++;
     }
 
     for(let x = length - 1; x > 0; x--){
-
       this.queue[x] = this.queue[x - 1];
     }
 
@@ -125,11 +116,9 @@ CacheClass.prototype.set = function(key, value){
 };
 
 CacheClass.prototype.get = function(key){
-
   const cache = this.cache[key];
 
   if(this.limit && cache){
-
     // probably the indexOf() method performs faster when matched content is on front (left-to-right)
     // using lastIndexOf() does not help, it performs almost slower
 
@@ -143,7 +132,6 @@ CacheClass.prototype.get = function(key){
     // }
 
     if(pos){
-
       const tmp = this.queue[pos - 1];
       this.queue[pos - 1] = this.queue[pos];
       this.queue[pos] = tmp;
@@ -154,14 +142,11 @@ CacheClass.prototype.get = function(key){
 };
 
 CacheClass.prototype.del = function(id){
-
   for(let i = 0, item, key; i < this.queue.length; i++){
-
     key = this.queue[i];
     item = this.cache[key];
 
     if(item.indexOf(id) !== -1){
-
       this.queue.splice(i--, 1);
       delete this.cache[key];
     }

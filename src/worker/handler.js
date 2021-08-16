@@ -1,7 +1,6 @@
 import Index from '../index.js';
 
 export default function(data) {
-
   data = data['data'];
 
   /** @type Index */
@@ -10,7 +9,6 @@ export default function(data) {
   const task = data['task'];
 
   switch(task){
-
   case 'init':
 
     const options = data['options'] || {};
@@ -20,12 +18,10 @@ export default function(data) {
     options['cache'] = false;
 
     if(encode && (encode.indexOf('function') === 0)){
-
       options['encode'] = Function('return ' + encode)();
     }
 
     if(factory){
-
       // export the FlexSearch global payload to "self"
       Function('return ' + factory)()(self);
 
@@ -36,7 +32,6 @@ export default function(data) {
       delete self['FlexSearch'];
     }
     else{
-
       self['_index'] = new Index(options);
     }
 
