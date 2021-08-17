@@ -21,10 +21,6 @@ import { intersect, intersect_union } from './intersect.js';
 
 export class Document {
   constructor(options) {
-    if (!(this instanceof Document)) {
-      return new Document(options);
-    }
-
     const document = options['document'] || options['doc'] || options;
     let opt;
 
@@ -416,47 +412,45 @@ export class Document {
  * @this Document
  */
 
-class parse_descriptor {
-  constructor(options, document) {
-    const index = create_object();
-    let field = document['index'] || document['field'] || document;
+function parse_descriptor(options, document) {
+  const index = create_object();
+  let field = document['index'] || document['field'] || document;
 
-    if (is_string(field)) {
-      field = [field];
-    }
-
-    for (let i = 0, key, opt; i < field.length; i++) {
-      key = field[i];
-
-      if (!is_string(key)) {
-        opt = key;
-        key = key['field'];
-      }
-
-      opt = is_object(opt) ? Object.assign({}, options, opt) : options;
-
-      if (!this.worker) {
-        index[key] = new Index(opt, this.register);
-      }
-
-      this.tree[i] = parse_tree(key, this.marker);
-      this.field[i] = key;
-    }
-
-    if (this.storetree) {
-      let store = document['store'];
-
-      if (is_string(store)) {
-        store = [store];
-      }
-
-      for (let i = 0; i < store.length; i++) {
-        this.storetree[i] = parse_tree(store[i], this.marker);
-      }
-    }
-
-    return index;
+  if (is_string(field)) {
+    field = [field];
   }
+
+  for (let i = 0, key, opt; i < field.length; i++) {
+    key = field[i];
+
+    if (!is_string(key)) {
+      opt = key;
+      key = key['field'];
+    }
+
+    opt = is_object(opt) ? Object.assign({}, options, opt) : options;
+
+    if (!this.worker) {
+      index[key] = new Index(opt, this.register);
+    }
+
+    this.tree[i] = parse_tree(key, this.marker);
+    this.field[i] = key;
+  }
+
+  if (this.storetree) {
+    let store = document['store'];
+
+    if (is_string(store)) {
+      store = [store];
+    }
+
+    for (let i = 0; i < store.length; i++) {
+      this.storetree[i] = parse_tree(store[i], this.marker);
+    }
+  }
+
+  return index;
 }
 
 function parse_tree(key, marker){
