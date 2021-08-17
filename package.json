@@ -7,6 +7,7 @@
   "copyright": "Nextapps GmbH",
   "license": "Apache-2.0",
   "browser": "dist/flexsearch.browser.js",
+  "debug": "dist/flexsearch.debug.js",
   "keywords": [
     "fulltext search",
     "elastic search",
