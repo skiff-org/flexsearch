@@ -1712,8 +1712,9 @@
       // this switch is used by recall of promise callbacks
       this.async = false;
 
-      this.index = parse_descriptor.call(this, options, document);
+      this.index = this.parse_descriptor(options, document);
     }
+
     /**
      *
      * @param id
@@ -2071,51 +2072,49 @@
       });
       return result;
     }
-  }
 
-  /**
-   * @this Document
-   */
+    // Helper methods
 
-  function parse_descriptor(options, document) {
-    const index = create_object();
-    let field = document['index'] || document['field'] || document;
+    parse_descriptor(options, document) {
+      const index = create_object();
+      let field = document['index'] || document['field'] || document;
 
-    if (is_string(field)) {
-      field = [field];
+      if (is_string(field)) {
+        field = [field];
+      }
+
+      for (let i = 0, key, opt; i < field.length; i++) {
+        key = field[i];
+
+        if (!is_string(key)) {
+          opt = key;
+          key = key['field'];
+        }
+
+        opt = is_object(opt) ? Object.assign({}, options, opt) : options;
+
+        if (!this.worker) {
+          index[key] = new Index(opt, this.register);
+        }
+
+        this.tree[i] = parse_tree(key, this.marker);
+        this.field[i] = key;
+      }
+
+      if (this.storetree) {
+        let store = document['store'];
+
+        if (is_string(store)) {
+          store = [store];
+        }
+
+        for (let i = 0; i < store.length; i++) {
+          this.storetree[i] = parse_tree(store[i], this.marker);
+        }
+      }
+
+      return index;
     }
-
-    for (let i = 0, key, opt; i < field.length; i++) {
-      key = field[i];
-
-      if (!is_string(key)) {
-        opt = key;
-        key = key['field'];
-      }
-
-      opt = is_object(opt) ? Object.assign({}, options, opt) : options;
-
-      if (!this.worker) {
-        index[key] = new Index(opt, this.register);
-      }
-
-      this.tree[i] = parse_tree(key, this.marker);
-      this.field[i] = key;
-    }
-
-    if (this.storetree) {
-      let store = document['store'];
-
-      if (is_string(store)) {
-        store = [store];
-      }
-
-      for (let i = 0; i < store.length; i++) {
-        this.storetree[i] = parse_tree(store[i], this.marker);
-      }
-    }
-
-    return index;
   }
 
   function parse_tree(key, marker){
