@@ -1,4 +1,4 @@
-import { create_object, concat } from './common.js';
+import { create_object } from './common.js';
 
 /**
  * Implementation based on Array.indexOf() provides better performance,

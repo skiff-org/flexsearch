@@ -1,5 +1,5 @@
 //import { promise as Promise } from "./polyfill.js";
-import { is_function, is_object, is_string } from './common.js';
+import { is_function } from './common.js';
 
 export default function(prototype){
   register(prototype, 'add');

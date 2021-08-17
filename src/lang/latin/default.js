@@ -1,4 +1,4 @@
-import { pipeline, normalize, regex_whitespace } from '../../lang.js';
+import { pipeline, regex_whitespace } from '../../lang.js';
 
 export const rtl = false;
 export const tokenize = '';

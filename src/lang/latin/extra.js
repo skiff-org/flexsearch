@@ -1,4 +1,4 @@
-import { regex, replace, collapse } from '../../lang.js';
+import { regex, collapse } from '../../lang.js';
 import { encode as encode_advanced } from './advanced.js';
 
 export const rtl = false;
@@ -21,18 +21,18 @@ const //soundex_b = regex(prefix + "p"),
   //regex_vowel = regex(prefix + "[aeiouy]");
   regex_vowel = regex(prefix + '[aeo]');
 
-const pairs = [
+// const pairs = [
 
-  // soundex_b, "b",
-  // soundex_s, "s",
-  // soundex_k, "k",
-  // soundex_m, "m",
-  // soundex_t, "t",
-  // soundex_f, "f",
-  // regex("(?![aeiouy])h(?![aeiouy])"), "",
-  // regex("(?!^[aeiouy])h(?!^[aeiouy])"), "",
-  regex_vowel, ''
-];
+// soundex_b, "b",
+// soundex_s, "s",
+// soundex_k, "k",
+// soundex_m, "m",
+// soundex_t, "t",
+// soundex_f, "f",
+// regex("(?![aeiouy])h(?![aeiouy])"), "",
+// regex("(?!^[aeiouy])h(?!^[aeiouy])"), "",
+//   regex_vowel, ''
+// ];
 
 /**
  * @this IndexInterface
