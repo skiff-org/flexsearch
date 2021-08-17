@@ -266,7 +266,8 @@ export function intersect(arrays, limit, offset, suggest) {
             }
 
             if(suggest){
-              check_suggest[id] = (check_idx = check_suggest[id]) ? ++check_idx : check_idx = 1;
+              check_idx = check_suggest[id];
+              check_suggest[id] = check_idx ? ++check_idx : check_idx = 1;
 
               // do not adding IDs which are already included in the result (saves one loop)
               // the first intersection match has the check index 2, so shift by -2
