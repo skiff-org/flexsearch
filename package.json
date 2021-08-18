@@ -32,7 +32,8 @@
   "scripts": {
     "lint": "yarn run eslint src",
     "build": "rollup --config",
-    "watch": "rollup --config --watch"
+    "watch": "rollup --config --watch",
+    "test": "ava"
   },
   "files": [
     "dist/**",
