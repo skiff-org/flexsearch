@@ -29,3 +29,23 @@ test('Simple search', t => {
   searchResult = idx.search('unrelated');
   t.is(searchResult.length, 0);
 });
+
+test('Index (de)serialization', t => {
+  const idx = new Index();
+  // Sourced from MIT:
+  // http://shakespeare.mit.edu/julius_caesar/julius_caesar.3.2.html
+  idx.add(1, 'Citizens:');
+  idx.add(2, 'We will be satisfied; let us be satisfied.');
+  idx.add(3, 'Brutus:');
+  idx.add(4, 'Then follow me, and give me audience, friends.');
+  idx.add(5, 'Cassius, go you into the other street,');
+  idx.add(6, 'And part the numbers.');
+  idx.add(7, 'Those that will hear me speak, let \'em stay here;');
+  idx.add(8, 'Those that will follow Cassius, go with him;');
+  idx.add(9, 'And public reasons shall be rendered');
+  idx.add(10, 'Of Caesar\'s death.');
+
+  const serialized = JSON.stringify(idx.serialize());
+  const deserialized = Index.deserialize(JSON.parse(serialized));
+  t.deepEqual(idx, deserialized);
+});
