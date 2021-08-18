@@ -69,3 +69,25 @@ test('Simple document search', t => {
   t.assert(searchResult[0].result.includes(5));
   t.assert(searchResult[0].result.includes(58));
 });
+
+test('Remove document', t => {
+  const doc = new Document({
+    document: {
+      id: 'id',
+      field: [
+        'author',
+        'content'
+      ]
+    }
+  });
+
+  doc.add({
+    id: 9,
+    author: 'Q-Tip',
+    content: 'before I had status and before I had a pager'
+  });
+
+  t.assert(doc.search('before').length > 0);
+  doc.remove(9)
+  t.is(doc.search('before').length, 0);
+});

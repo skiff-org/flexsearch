@@ -49,3 +49,17 @@ test('Index (de)serialization', t => {
   const deserialized = Index.deserialize(JSON.parse(serialized));
   t.deepEqual(idx, deserialized);
 });
+
+test('Remove a document from the index', t => {
+  // Create an index with one doc
+  const idx = new Index();
+  idx.add(1, 'Lorem ipsum dolor');
+
+  // This search should return one result
+  t.is(idx.search('ipsum').length, 1);
+
+  // Remove the doc
+  idx.remove(1);
+  // Now we should have zero results
+  t.is(idx.search('ipsum').length, 0);
+});
