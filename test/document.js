@@ -30,6 +30,18 @@ test('Simple document search', t => {
     content: 'Every Soul has its Dark'
   });
 
+  doc.add({
+    id: 5,
+    title: 'POWER',
+    content: 'And it\'s still a very Christian way to think about living'
+  });
+
+  doc.add({
+    id: 58,
+    title: 'Independence Day',
+    content: 'Everybody knows you only live a day but it\'s brilliant anyway'
+  });
+
   let searchResult;
 
   // this should only register one hit, in content
@@ -46,4 +58,14 @@ test('Simple document search', t => {
   t.truthy(searchResult.find(result => result.field === 'title'));
   // And one should have field 'content'
   t.truthy(searchResult.find(result => result.field === 'content'));
+
+  // This time, we should get two matches, for POWER and Independence Day.
+  // But they should both be matches on one field
+  searchResult = doc.search('it\'s');
+  // Therefore, we should only have one element here
+  t.is(searchResult.length, 1);
+  // And within that element, two results, 5 and 58
+  t.is(searchResult[0].result.length, 2);
+  t.assert(searchResult[0].result.includes(5));
+  t.assert(searchResult[0].result.includes(58));
 });
