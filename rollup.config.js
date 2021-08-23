@@ -7,8 +7,8 @@ export default [
   {
     input: 'src/lib.js',
     output: {
-      name: `dist/${pkg.name}.min.js`,
-      file: pkg.browser,
+      name: pkg.name,
+      file: `dist/${pkg.name}.min.js`,
       format: 'umd',
       sourcemap: true
     },
@@ -17,8 +17,8 @@ export default [
   {
     input: 'src/lib.js',
     output: {
-      name: `dist/${pkg.name}.js`,
-      file: pkg.browser,
+      name: pkg.name,
+      file: `dist/${pkg.name}.js`,
       format: 'umd',
     },
   }
