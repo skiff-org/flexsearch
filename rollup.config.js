@@ -9,7 +9,7 @@ export default [
     output: {
       name: pkg.name,
       file: `dist/${pkg.name}.min.js`,
-      format: 'umd',
+      format: 'es',
       sourcemap: true
     },
     plugins: terser({format: { keep_quoted_props: true }})
@@ -19,7 +19,7 @@ export default [
     output: {
       name: pkg.name,
       file: `dist/${pkg.name}.js`,
-      format: 'umd',
+      format: 'es',
     },
   }
 ]
