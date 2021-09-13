@@ -45,36 +45,20 @@ document.search(options);
 
 Index methods:
 
-- <a href="#index.add">Index.__add__(id, string)</a> *
-- <a href="#index.append">Index.__append__(id, string)</a> *
-- <a href="#index.update">Index.__update__(id, string)</a> *
-- <a href="#index.remove">Index.__remove__(id)</a> *
-- <a href="#index.search">Index.__search__(string, \<limit\>, \<options\>)</a> *
-- <a href="#index.search">Index.__search__(options)</a> *
-- _async_ <a href="#index.export">Index.__export__(handler)</a>
-- _async_ <a href="#index.import">Index.__import__(key, data)</a>
-
-WorkerIndex methods:
-
-- _async_ <a href="#index.add">Index.__add__(id, string)</a>
-- _async_ <a href="#index.append">Index.__append__(id, string)</a>
-- _async_ <a href="#index.update">Index.__update__(id, string)</a>
-- _async_ <a href="#index.remove">Index.__remove__(id)</a>
-- _async_ <a href="#index.search">Index.__search__(string, \<limit\>, \<options\>)</a>
-- _async_ <a href="#index.search">Index.__search__(options)</a>
-- _async_ <a href="#index.export">~~Index.__export__(handler)~~</a> (WIP)
-- _async_ <a href="#index.import">~~Index.__import__(key, data)~~</a> (WIP)
+- [`index.add(id, string): this`](#index.add)*
+- [`index.update(id, string): this`](#index.update) *
+- [`index.remove(id): this`](#index.remove) *
+- [`index.search(string, limit?, options?): any[]`](#index.search) *
+- [`index.serialize(): Record<string, any>`](#index.serialize)
+- [`Index.deserialize(Record<string, any>): Index`](#Index.deserialize)
 
 Document methods:
 
-- <a href="#document.add">Document.__add__(\<id\>, document)</a> *
-- <a href="#document.append">Document.__append__(\<id\>, document)</a> *
-- <a href="#document.update">Document.__update__(\<id\>, document)</a> *
-- <a href="#document.remove">Document.__remove__(id || document)</a> *
-- <a href="#document.search">Document.__search__(string, \<limit\>, \<options\>)</a> *
-- <a href="#document.search">Document.__search__(options)</a> *
-- _async_ <a href="#document.export">Document.__export__(handler)</a>
-- _async_ <a href="#document.import">Document.__import__(key, data)</a>
+- [`document.add(id?, document): this`](#document.add) *
+- [`document.update(id?, document): this`](#document.update) *
+- [`document.remove(id): this`](#document.remove) *
+- [`document.search(string, limit?, options?): any`](#document.search) *
+- [`document.serialize(): Record<string, any>`]()
 
 <span>*</span> For each of those methods there exist an asynchronous equivalent:
 
@@ -86,16 +70,8 @@ Async Version:
 - _async_ <a href="#removeAsync">.__removeAsync__( ... , \<callback\>)</a>
 - _async_ <a href="#searchAsync">.__searchAsync__( ... , \<callback\>)</a>
 
-Async methods will return a `Promise`, alternatively you can pass a callback function as the last parameter.
+Async methods will return a `Promise`
 
-Methods `export` and also `import` are always async as well as every method you call on a Worker-based Index.
-
-<a name="options"></a>
-## Options
-
-FlexSearch is highly customizable. Make use of the right options can really improve your results as well as memory economy and query time.
-
-<a name="options-index"></a>
 ### Index Options
 
 <table>
