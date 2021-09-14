@@ -8,7 +8,7 @@
 
 import { Index } from './index.js';
 import Cache, { searchCache } from './cache.js';
-import { create_object, is_array, is_string, is_object, parse_option } from './common.js';
+import { create_object, is_array, is_string, is_object } from './common.js';
 import apply_async from './async.js';
 import { intersect, intersect_union } from './intersect.js';
 
@@ -21,28 +21,27 @@ import { intersect, intersect_union } from './intersect.js';
 
 export class Document {
   constructor(options) {
-    const document = options['document'] || options['doc'] || options;
+    const document = options.document || options.doc || options;
     let opt;
 
     this.tree = [];
     this.field = [];
     this.marker = [];
     this.register = create_object();
-    this.key = ((opt = document['key'] || document['id']) && parse_tree(opt, this.marker)) || 'id';
-    this.fastupdate = parse_option(options['fastupdate'], true);
+    this.key = ((opt = document.key || document.id) && parse_tree(opt, this.marker)) || 'id';
 
-    this.storetree = (opt = document['store']) && (opt !== true) && [];
+    this.storetree = (opt = document.store) && (opt !== true) && [];
     this.store = opt && create_object();
 
-    this.tag = ((opt = document['tag']) && parse_tree(opt, this.marker));
+    this.tag = ((opt = document.tag) && parse_tree(opt, this.marker));
     this.tagindex = opt && create_object();
 
-    this.cache = (opt = options['cache']) && new Cache(opt);
+    this.cache = (opt = options.cache) && new Cache(opt);
 
     // do not apply cache again for the indexes
-    options['cache'] = false;
+    options.cache = false;
 
-    this.worker = options['worker'];
+    this.worker = options.worker;
 
     // this switch is used by recall of promise callbacks
     this.async = false;
@@ -96,12 +95,6 @@ export class Document {
 
             if (!_append || (arr.indexOf(id) === -1)) {
               arr[arr.length] = id;
-
-              // add a reference to the register for fast updates
-              if (this.fastupdate) {
-                const tmp = this.register[id] || (this.register[id] = []);
-                tmp[tmp.length] = arr;
-              }
             }
           }
         }
@@ -147,27 +140,19 @@ export class Document {
       for (let i = 0; i < this.field.length; i++) {
         // workers does not share the register
         this.index[this.field[i]].remove(id, !this.worker);
-
-        if (this.fastupdate) {
-          // when fastupdate was enabled all ids are removed
-          break;
-        }
       }
 
       if (this.tag) {
-        // when fastupdate was enabled all ids are already removed
-        if (!this.fastupdate) {
-          for (let key in this.tagindex) {
-            const tag = this.tagindex[key];
-            const pos = tag.indexOf(id);
+        for (let key in this.tagindex) {
+          const tag = this.tagindex[key];
+          const pos = tag.indexOf(id);
 
-            if (pos !== -1) {
-              if (tag.length > 1) {
-                tag.splice(pos, 1);
-              }
-              else {
-                delete this.tagindex[key];
-              }
+          if (pos !== -1) {
+            if (tag.length > 1) {
+              tag.splice(pos, 1);
+            }
+            else {
+              delete this.tagindex[key];
             }
           }
         }
@@ -193,7 +178,7 @@ export class Document {
     if (!options) {
       if (!limit && is_object(query)) {
         options = /** @type {Object} */ (query);
-        query = options['query'];
+        query = options.query;
       }
       else if (is_object(limit)) {
         options = /** @type {Object} */ (limit);
@@ -211,13 +196,13 @@ export class Document {
         options = null;
       }
       else {
-        pluck = options['pluck'];
-        field = pluck || options['index'] || options['field'] /*|| (is_string(options) && [options])*/;
-        tag = options['tag'];
-        enrich = this.store && options['enrich'];
-        bool = options['bool'] === 'and';
-        limit = options['limit'] || 100;
-        offset = options['offset'] || 0;
+        pluck = options.pluck;
+        field = pluck || options.index || options.field /*|| (is_string(options) && [options])*/;
+        tag = options.tag;
+        enrich = this.store && options.enrich;
+        bool = options.bool === 'and';
+        limit = options.limit || 100;
+        offset = options.offset || 0;
 
         if (tag) {
           if (is_string(tag)) {
@@ -259,7 +244,7 @@ export class Document {
 
       if (!is_string(key)) {
         opt = key;
-        key = key['field'];
+        key = key.field;
       }
 
       if (promises) {
@@ -412,7 +397,7 @@ export class Document {
 
   parse_descriptor(options, document) {
     const index = create_object();
-    let field = document['index'] || document['field'] || document;
+    let field = document.index || document.field || document;
 
     if (is_string(field)) {
       field = [field];
@@ -423,13 +408,14 @@ export class Document {
 
       if (!is_string(key)) {
         opt = key;
-        key = key['field'];
+        key = key.field;
       }
 
       opt = is_object(opt) ? Object.assign({}, options, opt) : options;
 
       if (!this.worker) {
-        index[key] = new Index(opt, this.register);
+        index[key] = new Index(opt);
+        index[key].register = this.register;
       }
 
       this.tree[i] = parse_tree(key, this.marker);
@@ -437,7 +423,7 @@ export class Document {
     }
 
     if (this.storetree) {
-      let store = document['store'];
+      let store = document.store;
 
       if (is_string(store)) {
         store = [store];

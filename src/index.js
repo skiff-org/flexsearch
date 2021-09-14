@@ -7,74 +7,39 @@
  */
 
 import { encode as default_encoder } from './lang/latin/default.js';
-import { create_object, create_object_array, concat, sort_by_length_down, is_array, is_string, is_object, parse_option } from './common.js';
+import { create_object, create_object_array, concat, sort_by_length_down, is_array, is_object, parse_option } from './common.js';
 import { init_stemmer_or_matcher, init_filter } from './lang.js';
-import { global_lang, global_charset } from './global.js';
 import apply_async from './async.js';
 import { intersect } from './intersect.js';
 import Cache, { searchCache } from './cache.js';
-import apply_preset from './preset.js';
 
 /**
  * @constructor
  * @param {Object=} options
- * @param {Object=} _register
  * @return {Index}
  */
 
 export class Index {
-  constructor(options, _register) {
-    if (!(this instanceof Index)) {
-      return new Index(options);
-    }
-
-    let charset, lang, tmp;
-
-    if (options) {
-      options = apply_preset(options);
-
-      charset = options['charset'];
-      lang = options['lang'];
-
-      if (is_string(charset)) {
-        if (charset.indexOf(':') === -1) {
-          charset += ':default';
-        }
-
-        charset = global_charset[charset];
-      }
-
-      if (is_string(lang)) {
-        lang = global_lang[lang];
-      }
-    }
-    else {
-      options = {};
-    }
-
-    let resolution, optimize, context = options['context'] || {};
-
-    this.encode = options['encode'] || (charset && charset.encode) || default_encoder;
-    this.register = _register || create_object();
-    this.resolution = resolution = options['resolution'] || 9;
-    this.tokenize = tmp = (charset && charset.tokenize) || options['tokenize'] || 'strict';
-    this.depth = (tmp === 'strict') && context['depth'];
-    this.bidirectional = parse_option(context['bidirectional'], true);
-    this.optimize = optimize = parse_option(options['optimize'], true);
-    this.fastupdate = parse_option(options['fastupdate'], true);
-    this.minlength = options['minlength'] || 1;
-    this.boost = options['boost'];
+  constructor(options = {}) {
+    this.encode = default_encoder;
+    this.register = create_object();
+    this.resolution = options.resolution || 9;
+    this.tokenize = options.tokenize || 'strict';
+    this.depth = options?.context?.depth;
+    this.bidirectional = parse_option(options?.context?.bidirectional, true);
+    this.optimize = parse_option(options.optimize, true);
+    this.minlength = options.minlength || 1;
+    this.boost = options.boost;
 
     // when not using the memory strategy the score array should not pre-allocated to its full length
-    this.map = optimize ? create_object_array(resolution) : create_object();
-    this.resolution_ctx = resolution = context['resolution'] || 1;
-    this.ctx = optimize ? create_object_array(resolution) : create_object();
-    this.rtl = (charset && charset.rtl) || options['rtl'];
-    this.matcher = (tmp = options['matcher'] || (lang && lang.matcher)) && init_stemmer_or_matcher(tmp, false);
-    this.stemmer = (tmp = options['stemmer'] || (lang && lang.stemmer)) && init_stemmer_or_matcher(tmp, true);
-    this.filter = (tmp = options['filter'] || (lang && lang.filter)) && init_filter(tmp);
-
-    this.cache = (tmp = options['cache']) && new Cache(tmp);
+    this.map = this.optimize ? create_object_array(options?.context?.resolution || 9) : create_object();
+    this.resolution_ctx = options?.context?.resolution || 1;
+    this.ctx = this.optimize ? create_object_array(options?.context?.resolution || 1) : create_object();
+    this.rtl = options.rtl;
+    this.matcher = options.matcher && init_stemmer_or_matcher(options.matcher, false);
+    this.stemmer = options.stemmer && init_stemmer_or_matcher(options.stemmer, true);
+    this.filter = options.filter && init_filter(options.filter);
+    this.cache = options.cache && new Cache(options.cache);
   }
   //Index.prototype.pipeline = pipeline;
   /**
@@ -200,8 +165,6 @@ export class Index {
             }
           }
         }
-
-        this.fastupdate || (this.register[id] = 1);
       }
     }
 
@@ -242,12 +205,8 @@ export class Index {
 
       if (!append || (arr.indexOf(id) === -1)) {
         arr[arr.length] = id;
-
-        // add a reference to the register for fast updates
-        if (this.fastupdate) {
-          const tmp = this.register[id] || (this.register[id] = []);
-          tmp[tmp.length] = arr;
-        }
+        this.register[id] ||= [];
+        this.register[id].push(arr);
       }
     }
   }
@@ -261,7 +220,7 @@ export class Index {
     if (!options) {
       if (!limit && is_object(query)) {
         options = /** @type {Object} */ (query);
-        query = options['query'];
+        query = options.query;
       }
       else if (is_object(limit)) {
         options = /** @type {Object} */ (limit);
@@ -273,10 +232,10 @@ export class Index {
     let context, suggest, offset = 0;
 
     if (options) {
-      limit = options['limit'];
-      offset = options['offset'] || 0;
-      context = options['context'];
-      suggest = options['suggest'];
+      limit = options.limit;
+      offset = options.offset || 0;
+      context = options.context;
+      suggest = options.suggest;
     }
 
     if (query) {
@@ -475,19 +434,10 @@ export class Index {
     const refs = this.register[id];
 
     if (refs) {
-      if (this.fastupdate) {
-        // fast updates performs really fast but did not fully cleanup the key entries
-        for (let i = 0, tmp; i < refs.length; i++) {
-          tmp = refs[i];
-          tmp.splice(tmp.indexOf(id), 1);
-        }
-      }
-      else {
-        remove_index(this.map, id, this.resolution, this.optimize);
+      remove_index(this.map, id, this.resolution, this.optimize);
 
-        if (this.depth) {
-          remove_index(this.ctx, id, this.resolution_ctx, this.optimize);
-        }
+      if (this.depth) {
+        remove_index(this.ctx, id, this.resolution_ctx, this.optimize);
       }
 
       _skip_deletion || delete this.register[id];
@@ -505,10 +455,11 @@ export class Index {
    */
   serialize() {
     return {
-      reg: this.register, // No support for fastupdate
+      reg: this.register,
       opt: this.optimize,
       map: this.map,
-      ctx: this.ctx
+      ctx: this.ctx,
+      tok: this.tokenize
     };
   }
 
@@ -523,6 +474,7 @@ export class Index {
     result.register = obj.reg;
     result.map      = obj.map;
     result.ctx      = obj.ctx;
+    result.tokenize = obj.tok;
     return result;
   }
 }
