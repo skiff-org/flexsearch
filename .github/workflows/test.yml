@@ -23,7 +23,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
-    - run: yarn build
+    - run: yarn run build
   lint:
     runs-on: ubuntu-latest
     strategy:
@@ -37,7 +37,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
-    - run: yarn lint
+    - run: yarn run lint
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -51,4 +51,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
-    - run: yarn test
+    - run: yarn run test
