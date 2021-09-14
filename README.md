@@ -912,8 +912,8 @@ var results = index.search("单词");
 Assuming our document has a data structure like this:
 
 ```json
-{ 
-    "id": 0, 
+{
+    "id": 0,
     "content": "some text"
 }
 ```
@@ -928,8 +928,8 @@ const index = new Document({
     }
 });
 
-index.add({ 
-    id: 0, 
+index.add({
+    id: 0,
     content: "some text"
 });
 ```
@@ -1171,7 +1171,7 @@ const index = new Document({
 Again, when searching you have to use the same colon-separated-string from your field definition.
 
 ```js
-index.search(query, { 
+index.search(query, {
     index: "contents[]:body:title"
 });
 ```
@@ -1239,7 +1239,7 @@ function add(sequential_data){
                 record: record
             });
         }
-    }  
+    }
 }
 
 // now just use add() helper method as usual:
@@ -1403,9 +1403,9 @@ This result set is a replacement of "boolean search". Instead of applying your b
 There is one situation where the `bool` property is being still supported. When you like to switch the default "or" logic from the field search into "and", e.g.:
 
 ```js
-index.search(query, { 
+index.search(query, {
     index: ["title", "content"],
-    bool: "and" 
+    bool: "and"
 });
 ```
 
@@ -1417,7 +1417,7 @@ Like the `key` for the ID just define the path to the tag:
 
 ```js
 const index = new Document({
-    document: { 
+    document: {
         id: "id",
         tag: "tag",
         index: "content"
@@ -1446,9 +1446,9 @@ index.add({
 You can perform a tag-specific search by:
 
 ```js
-index.search(query, { 
+index.search(query, {
     index: "content",
-    tag: "animal" 
+    tag: "animal"
 });
 ```
 
@@ -1457,7 +1457,7 @@ This just gives you result which was tagged with the given tag.
 Use multiple tags when searching:
 
 ```js
-index.search(query, { 
+index.search(query, {
     index: "content",
     tag: ["cat", "dog"]
 });
@@ -1470,7 +1470,7 @@ This gives you result which are tagged with one of the given tag.
 This is another situation where the `bool` property is still supported. When you like to switch the default "or" logic from the tag search into "and", e.g.:
 
 ```js
-index.search(query, { 
+index.search(query, {
     index: "content",
     tag: ["dog", "animal"],
     bool: "and"
@@ -1527,7 +1527,7 @@ This will add the whole original content to the store:
 
 ```js
 const index = new Document({
-    document: { 
+    document: {
         index: "content",
         store: true
     }
@@ -1593,9 +1593,9 @@ Here a useful example of configuring doc and store:
 
 ```js
 const index = new Document({
-    document: { 
+    document: {
         index: "content",
-        store: ["author", "email"] 
+        store: ["author", "email"]
     }
 });
 
@@ -1663,7 +1663,7 @@ Create an index and apply custom options for the context:
 var index = new FlexSearch({
 
     tokenize: "strict",
-    context: { 
+    context: {
         resolution: 5,
         depth: 3,
         bidirectional: true
@@ -1734,8 +1734,8 @@ On the other hand, the `Document.deserialize()` method requires the document `op
 const serialized = JSON.stringify(idx.serialize());
 const deserialized = Document.deserialize(JSON.parse(serialized), {
   document: {
-  	id: 'id',
-  	field: ['text']
+    id: 'id',
+    field: ['text']
   }
 });
 ```
@@ -1791,5 +1791,6 @@ Split indexes by categories improves performance significantly.
 
 ---
 
-Copyright 2018-2021 Nextapps GmbH<br>
-Released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2.0 License</a><br>
+Copyright 2018-2021 Nextapps GmbH, 2021– Skiff World, Inc.
+
+Released under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
