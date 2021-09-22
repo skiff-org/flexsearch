@@ -1,10 +1,12 @@
 {
   "name": "@skiff-org/trawler",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A modern search library for Skiff",
   "homepage": "https://github.com/skiff-org/trawler/",
   "author": "Thomas Wilkerling",
-  "contributors": ["Andrew Lee"],
+  "contributors": [
+    "Andrew Lee"
+  ],
   "copyright": [
     "Nextapps GmbH",
     "Skiff World, Inc."
@@ -50,6 +52,9 @@
   ],
   "readme": "README.md",
   "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@rollup/plugin-babel": "^5.3.0",
     "ava": "^3.15.0",
     "eslint": "^7.32.0",
     "rollup": "^2.56.2",

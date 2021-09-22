@@ -1,3 +1,5 @@
+import babel from '@rollup/plugin-babel';
+
 export default [
   {
     input: 'src/lib.js',
@@ -12,6 +14,7 @@ export default [
       exports: 'named',
       sourcemap: true,
     }],
+    plugins: [babel()]
   }
 ];
 
