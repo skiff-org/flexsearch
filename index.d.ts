@@ -46,10 +46,7 @@ export class Document<T> {
     options?: SearchOptions
   ): any // The shape of the resulting object can vary widely,
   // so we will put off typing it for now
-  search(
-    query: string,
-    options?: SearchOptions
-  ): Promise<any> // The shape of the resulting object can vary widely,
+
   contain(id: any): boolean;
 
   // TODO add async methods
@@ -66,6 +63,7 @@ interface SearchOptions {
   bool?: "and" | "or" | "not";
   query?: string;
   enrich?: boolean;
+  context?: boolean;
   //TODO: Sorting
 }
 

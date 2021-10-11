@@ -7,7 +7,7 @@
  */
 
 import { encode as default_encoder } from './lang/latin/default.js';
-import { create_object, create_object_array, concat, sort_by_length_down, is_array, is_object, parse_option } from './common.js';
+import { create_object, create_object_array, concat, sort_by_length_down, is_array, parse_option } from './common.js';
 import { init_stemmer_or_matcher, init_filter } from './lang.js';
 import apply_async from './async.js';
 import { intersect } from './intersect.js';
@@ -212,24 +212,14 @@ export class Index {
   }
   /**
    * @param {string|Object} query
-   * @param {number|Object=} limit
    * @param {Object=} options
    * @returns {Array<number|string>}
    */
-  search(query, limit, options) {
-    if (!options) {
-      if (!limit && is_object(query)) {
-        options = /** @type {Object} */ (query);
-        query = options.query;
-      }
-      else if (is_object(limit)) {
-        options = /** @type {Object} */ (limit);
-      }
-    }
-
+  search(query, options) {
     let result = [];
     let length;
     let context, suggest, offset = 0;
+    let limit = 100;
 
     if (options) {
       limit = options.limit;
@@ -271,8 +261,6 @@ export class Index {
     if (!length) {
       return result;
     }
-
-    limit || (limit = 100);
 
     let depth = this.depth && (length > 1) && (context !== false);
     let index = 0, keyword;
