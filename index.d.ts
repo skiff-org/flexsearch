@@ -46,10 +46,7 @@ export class Document<T> {
     options?: SearchOptions
   ): any // The shape of the resulting object can vary widely,
   // so we will put off typing it for now
-  search(
-    query: string,
-    options?: SearchOptions
-  ): Promise<any> // The shape of the resulting object can vary widely,
+
   contain(id: any): boolean;
 
   // TODO add async methods
@@ -66,6 +63,7 @@ interface SearchOptions {
   bool?: "and" | "or" | "not";
   query?: string;
   enrich?: boolean;
+  context?: boolean;
   //TODO: Sorting
 }
 
@@ -104,6 +102,12 @@ export type CreateOptions = {
   filter?: FilterFn | string | false;
   rtl?: boolean;
   document?: CreateDocumentOptions;
+  context?: {
+    bidirectional?: boolean;
+    resolution?: number;
+    depth?: number
+  }
+  minlength?: number;
 };
 
 //   limit	number	Sets the limit of results.
