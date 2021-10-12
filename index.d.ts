@@ -102,6 +102,7 @@ export type CreateOptions = {
   filter?: FilterFn | string | false;
   rtl?: boolean;
   document?: CreateDocumentOptions;
+  bidirectional?: boolean
 };
 
 //   limit	number	Sets the limit of results.
