@@ -103,6 +103,7 @@ export type CreateOptions = {
   rtl?: boolean;
   document?: CreateDocumentOptions;
   bidirectional?: boolean
+  minlength?: number;
 };
 
 //   limit	number	Sets the limit of results.
