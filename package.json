@@ -1,6 +1,6 @@
 {
   "name": "@skiff-org/trawler",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A modern search library for Skiff",
   "homepage": "https://github.com/skiff-org/trawler/",
   "author": "Thomas Wilkerling",
