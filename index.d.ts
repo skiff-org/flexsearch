@@ -102,7 +102,11 @@ export type CreateOptions = {
   filter?: FilterFn | string | false;
   rtl?: boolean;
   document?: CreateDocumentOptions;
-  bidirectional?: boolean
+  context?: {
+    bidirectional?: boolean;
+    resolution?: number;
+    depth?: number
+  }
   minlength?: number;
 };
 
