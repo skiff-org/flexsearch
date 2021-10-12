@@ -268,11 +268,8 @@ export class Index {
     if (depth) {
       keyword = query[0];
       index = 1;
-    }
-    else {
-      if (length > 1) {
-        query.sort(sort_by_length_down);
-      }
+    } else if (length > 1) {
+      query.sort(sort_by_length_down);
     }
 
     for (let arr, term; index < length; index++) {
@@ -291,8 +288,7 @@ export class Index {
         if (!suggest || (arr !== false) || !result.length) {
           keyword = term;
         }
-      }
-      else {
+      } else {
         arr = this.add_result(result, suggest, limit, offset, length === 1, term);
       }
 
@@ -309,13 +305,11 @@ export class Index {
             // fallback to non-contextual search when no result was found
             depth = 0;
             index = -1;
-
             continue;
           }
 
           return result;
-        }
-        else if (length === 1) {
+        } else if (length === 1) {
           // fast path optimization
           return single_result(result[0], limit, offset);
         }
